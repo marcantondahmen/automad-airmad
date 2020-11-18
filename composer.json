@@ -1,0 +1,19 @@
+{
+	"name": "automad/airtable",
+	"description": "An Airtable integration for Automad.",
+	"type": "automad-package",
+	"keywords": ["extension", "airtable"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Marc Anton Dahmen",
+			"homepage": "https://marcdahmen.de"
+		}
+	],
+	"require": {
+		"automad/package-installer": "^1.1 || dev-master"
+	},
+	"autoload": {
+		"classmap": [""]
+	}
+}
