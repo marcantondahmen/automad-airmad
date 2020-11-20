@@ -11,7 +11,8 @@
 		}
 	],
 	"require": {
-		"automad/package-installer": "^1.1 || dev-master"
+		"automad/package-installer": "^1.1 || dev-master",
+		"mustache/mustache": "^2.13"
 	},
 	"autoload": {
 		"classmap": [""]
