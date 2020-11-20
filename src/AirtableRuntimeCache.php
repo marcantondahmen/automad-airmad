@@ -15,6 +15,6 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class AirtableRuntimeCache {
 
-	public static $run = false; 
+	public static $output = false; 
 
 }

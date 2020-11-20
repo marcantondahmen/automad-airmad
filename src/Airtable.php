@@ -33,11 +33,11 @@ class Airtable {
 
 	public function Airtable($options, $Automad) {
 
-		if (AirtableRuntimeCache::$run) {
-			return false;
+		if (AirtableRuntimeCache::$output) {
+			return AirtableRuntimeCache::$output;
 		}
 
-		AirtableRuntimeCache::$run = true;
+		
 
 		if (!defined('AIRTABLE_TOKEN')) {
 			return 'AIRTABLE_TOKEN not defined!';
@@ -62,7 +62,9 @@ class Airtable {
 			$cache->save($this->tables);
 		}
 		
-		return $this->render();
+		AirtableRuntimeCache::$output = $this->render();
+
+		return AirtableRuntimeCache::$output;
 
 	}
 
