@@ -37,8 +37,6 @@ class Airtable {
 			return AirtableRuntimeCache::$output;
 		}
 
-		
-
 		if (!defined('AIRTABLE_TOKEN')) {
 			return 'AIRTABLE_TOKEN not defined!';
 		}
@@ -48,6 +46,7 @@ class Airtable {
 		$defaults = array(
 			'base' => false,
 			'tables' => false,
+			'view' => false,
 			'template' => false
 		);
 
@@ -61,6 +60,10 @@ class Airtable {
 			$this->tables = $this->requestAllTables();
 			$cache->save($this->tables);
 		}
+
+		if (is_readable(AM_BASE_DIR . $this->options->template)) {
+			$this->options->template = file_get_contents(AM_BASE_DIR . $this->options->template);
+		}
 		
 		AirtableRuntimeCache::$output = $this->render();
 
@@ -71,12 +74,29 @@ class Airtable {
 
 	private function render() {
 
-
 		$mst = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
 		$output = '';
 
-		foreach ($this->tables->{$this->activeTableName} as $record) {
-			$output .= $mst->render($this->options->template, $record->fields);
+		$with = function($text, $helper) use ($mst) {
+
+			$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+?\w)\s*=\>\s*(.*)/is';
+			preg_match($regex, $helper->render($text), $matches);
+			$record = $matches[1];
+			$table = $this->tables[$matches[2]];
+			$template = str_replace(array('{%', '%}'), array('{{', '}}'), $matches[3]);
+			$key = array_search($record, array_column($table, 'id'));
+			$data = $table[$key];
+			
+			return $mst->render($template, $data['fields']);
+
+		};
+	
+		foreach ($this->tables[$this->activeTableName] as $record) {
+
+			$data = $record['fields'];
+			$data['with'] = $with;
+			$output .= $mst->render($this->options->template, $data);
+
 		}
 		
 		return $output;
@@ -87,26 +107,39 @@ class Airtable {
 	private function requestAllTables() {
 
 		$tables = array();
+		$i = 0;
 	
 		foreach ($this->options->tables as $tableName) {
-			$tables[$tableName] = $this->requestAllRecords($tableName);
+
+			$view = false;
+
+			if ($i == 0) {
+				$view = $this->options->view;
+			}
+
+			$tables[$tableName] = $this->requestAllRecords($tableName, $view);
+			$i++;
+
 		}
 
-		return (object) $tables;
+		return $tables;
 
 	}
 
 
 
-	private function requestAllRecords($table) {
+	private function requestAllRecords($table, $view) {
 
 		$records = array();		
 		$url = "$this->apiUrl/{$this->options->base}/$table";
 
 		$query = array(
-			'maxRecords' => 10000,
-			'pageSize' => 100
+			'maxRecords' => 100000,
+			'pageSize' => 100,
+			'view' => $view
 		);
+
+		$query = array_filter($query);
 
 		$offset = true;
 		
@@ -120,13 +153,13 @@ class Airtable {
 
 			$data = $this->request("$url?$queryString");
 
-			if (isset($data->offset)) {
-				$offset = $data->offset;
+			if (isset($data['offset'])) {
+				$offset = $data['offset'];
 			} else {
 				$offset = false;
 			}
 
-			$records = array_merge($records, $data->records);
+			$records = array_merge($records, $data['records']);
 
 		}
 
@@ -157,7 +190,7 @@ class Airtable {
 		$output = curl_exec($curl);
 		
 		if (curl_getinfo($curl, CURLINFO_HTTP_CODE) == 200 && !curl_errno($curl)) {	
-			$data = json_decode($output);
+			$data = json_decode($output, true);
 		}
 		
 		curl_close($curl);
