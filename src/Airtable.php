@@ -47,17 +47,53 @@ class Airtable {
 
 		$defaults = array(
 			'base' => false,
-			'table' => false,
+			'tables' => false,
 			'template' => false
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
+		$this->options->tables = Core\Parse::csv($this->options->tables);
+		$this->activeTableName = $this->options->tables[0];
 
-		$records = $this->requestAllRecords($this->options->table);
+		$cache = new AirtableCache($this->options);
+
+		if (!$this->tables = $cache->load()) {
+			$this->tables = $this->requestAllTables();
+			$cache->save($this->tables);
+		}
 		
-		print_r($records);
+		return $this->render();
 
 	}
+
+
+	private function render() {
+
+
+		$mst = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
+		$output = '';
+
+		foreach ($this->tables->{$this->activeTableName} as $record) {
+			$output .= $mst->render($this->options->template, $record->fields);
+		}
+		
+		return $output;
+
+	}
+	
+
+	private function requestAllTables() {
+
+		$tables = array();
+	
+		foreach ($this->options->tables as $tableName) {
+			$tables[$tableName] = $this->requestAllRecords($tableName);
+		}
+
+		return (object) $tables;
+
+	}
+
 
 
 	private function requestAllRecords($table) {
@@ -66,8 +102,7 @@ class Airtable {
 		$url = "$this->apiUrl/{$this->options->base}/$table";
 
 		$query = array(
-			'view' => 'Grid view',
-			'maxRecords' => 1000,
+			'maxRecords' => 10000,
 			'pageSize' => 100
 		);
 
