@@ -77,9 +77,26 @@ class Airtable {
 		$mst = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
 		$output = '';
 
+		
+		$link = function($text, $helper) {
+			
+			preg_match('/(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is', $text, $matches);
+
+			$text = <<< MST
+					{{# {$matches[1]} }}
+						{{# with }}
+							{{.}} in {$matches[1]} => {$matches[2]}
+						{{/ with }}
+					{{/ {$matches[1]} }}
+MST;
+
+			return $helper->render($text);
+
+		};
+
 		$with = function($text, $helper) use ($mst) {
 
-			$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+?\w)\s*=\>\s*(.*)/is';
+			$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is';
 			preg_match($regex, $helper->render($text), $matches);
 			$record = $matches[1];
 			$table = $this->tables[$matches[2]];
@@ -94,6 +111,7 @@ class Airtable {
 		foreach ($this->tables[$this->activeTableName] as $record) {
 
 			$data = $record['fields'];
+			$data['link'] = $link;
 			$data['with'] = $with;
 			$output .= $mst->render($this->options->template, $data);
 
