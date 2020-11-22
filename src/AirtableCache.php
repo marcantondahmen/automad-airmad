@@ -13,6 +13,7 @@ namespace Automad;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
+
 class AirtableCache {
 
 	
@@ -52,8 +53,9 @@ class AirtableCache {
 
 	public function __construct($options) {
 
+		$hash = sha1("{$options->base}/{$options->table}/{$options->view}");
 		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable/' . $options->base;
-		$this->tablesFile = $this->cacheDir . '/' . sha1(json_encode($options));
+		$this->tablesFile = $this->cacheDir . '/' . $hash;
 		Core\FileSystem::makeDir($this->cacheDir);
 
 		if (is_readable($this->tablesFile)) {

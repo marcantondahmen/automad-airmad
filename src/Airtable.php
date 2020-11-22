@@ -13,6 +13,7 @@ namespace Automad;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
+
 class Airtable {
 
 
@@ -63,7 +64,8 @@ class Airtable {
 			'base' => false,
 			'table' => false,
 			'view' => false,
-			'template' => false
+			'template' => false,
+			'search' => false
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
@@ -133,6 +135,17 @@ MST;
 		foreach ($this->tables[$this->options->table] as $record) {
 
 			$data = $record['fields'];
+			
+			if ($this->options->search) {
+
+				$match = preg_match("/{$this->options->search}/is", json_encode($data));
+
+				if (!$match) {
+					continue;
+				}
+
+			}
+
 			$data['link'] = $link;
 			$data['with'] = $with;
 			$output .= $mst->render($this->options->template, $data);
@@ -219,7 +232,7 @@ MST;
 
 	}
 
-	
+
 	/**
 	 *	Makes an API curl request.
 	 *
