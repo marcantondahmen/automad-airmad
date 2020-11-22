@@ -16,23 +16,45 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 class AirtableCache {
 
 	
-	private $baseDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable';
+	/**
+	 *	The cache directory.
+	 */
 
+	private $cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable';
+
+
+	/**
+	 *	The cache lifetime.
+	 */
 
 	private $lifeTime = 43200;
 
 
+	/**
+	 *	Cache is outdated or not.
+	 */
+
 	private $isOutdated = true;
 
+
+	/**
+	 *	The cache file for the current instance base on a configuration hash.
+	 */
 
 	private $tablesFile = false;
 
 
+	/**
+	 *	The cache constructor. An instance identifies a cache file by a hash of its configuration.
+	 *
+	 *	@param array $options
+	 */
+
 	public function __construct($options) {
 
-		$this->baseDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable/' . $options->base;
-		$this->tablesFile = $this->baseDir . '/' . sha1(json_encode($options));
-		Core\FileSystem::makeDir($this->baseDir);
+		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable/' . $options->base;
+		$this->tablesFile = $this->cacheDir . '/' . sha1(json_encode($options));
+		Core\FileSystem::makeDir($this->cacheDir);
 
 		if (is_readable($this->tablesFile)) {
 			$mTime = filemtime($this->tablesFile);
@@ -48,6 +70,13 @@ class AirtableCache {
 
 	}
 
+
+	/**
+	 *	Loads a the cached tables from the cache.
+	 *
+	 *	@return array The unserialized tables array
+	 */
+
 	public function load() {
 
 		if ($this->isOutdated) {
@@ -56,9 +85,14 @@ class AirtableCache {
 
 		return unserialize(file_get_contents($this->tablesFile));
 
-
 	}
 
+
+	/**
+	 *	Saves the serialized tables array to the cache. 
+	 *
+	 *	@param array $tables
+	 */
 
 	public function save($tables) {
 

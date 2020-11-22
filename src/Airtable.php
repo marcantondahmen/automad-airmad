@@ -16,9 +16,23 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 class Airtable {
 
 
+	/**
+	 *	The base URL of the Airtable API.
+	 */
+
 	private $apiUrl = 'https://api.airtable.com/v0';
 
+
+	/**
+	 *	The authentication token.
+	 */
+
 	private $token = false;
+
+
+	/**
+	 *	The options array.
+	 */
 
 	private $options = array();
 
@@ -74,6 +88,12 @@ class Airtable {
 	}
 
 
+	/**
+	 *	Renders an item template.
+	 *
+	 *	@return string The rendered output.
+	 */
+
 	private function render() {
 
 		$mst = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
@@ -124,6 +144,14 @@ MST;
 	}
 	
 
+	/**
+	 *	Requests all tables from the API. The first table to be requested is $options->table.
+	 *	After downloading that table, all fields of the first record are tested for linked tables that 
+	 *	will be then downloaded as well.
+	 *
+	 *	@return array The tables array.
+	 */
+
 	private function requestAllTables() {
 
 		$tables = array();
@@ -142,6 +170,13 @@ MST;
 
 	}
 
+
+	/**
+	 *	Requests all records of a table.
+	 *
+	 *	@param string $table
+	 *	@param string $view
+	 */
 
 	private function requestAllRecords($table, $view = false) {
 
@@ -184,6 +219,12 @@ MST;
 
 	}
 
+	
+	/**
+	 *	Makes an API curl request.
+	 *
+	 *	@param string $url
+	 */
 
 	private function request($url) {
 
