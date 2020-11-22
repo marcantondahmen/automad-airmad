@@ -65,10 +65,12 @@ class Airtable {
 			'table' => false,
 			'view' => false,
 			'template' => false,
-			'search' => false
+			'searchValue' => false,
+			'searchFields' => false
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
+		$this->options->searchFields = Core\Parse::csv($this->options->searchFields);
 
 		$cache = new AirtableCache($this->options);
 
@@ -136,9 +138,10 @@ MST;
 
 			$data = $record['fields'];
 			
-			if ($this->options->search) {
+			if ($this->options->searchValue && $this->options->searchFields) {
 
-				$match = preg_match("/{$this->options->search}/is", json_encode($data));
+				$searchData = array_intersect_key($data, array_flip($this->options->searchFields));
+				$match = preg_match("/{$this->options->searchValue}/is", json_encode(array_values($searchData)));
 
 				if (!$match) {
 					continue;
