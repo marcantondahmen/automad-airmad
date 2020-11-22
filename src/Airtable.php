@@ -33,8 +33,10 @@ class Airtable {
 
 	public function Airtable($options, $Automad) {
 
-		if (AirtableRuntimeCache::$output) {
-			return AirtableRuntimeCache::$output;
+		$hash = sha1(json_encode($options));
+
+		if ($output = AirtableRuntimeCache::load($hash)) {
+			return $output;
 		}
 
 		if (!defined('AIRTABLE_TOKEN')) {
@@ -65,9 +67,11 @@ class Airtable {
 			$this->options->template = file_get_contents(AM_BASE_DIR . $this->options->template);
 		}
 		
-		AirtableRuntimeCache::$output = $this->render();
+		$output = $this->render();
 
-		return AirtableRuntimeCache::$output;
+		AirtableRuntimeCache::save($hash, $output);
+
+		return $output;
 
 	}
 

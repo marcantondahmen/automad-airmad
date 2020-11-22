@@ -15,6 +15,24 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class AirtableRuntimeCache {
 
-	public static $output = false; 
+	
+	private static $cache = array();
+	
+
+	public static function load($hash) {
+
+		if (array_key_exists($hash, self::$cache)) {
+			return self::$cache[$hash];
+		}
+		
+	}
+
+
+	public static function save($hash, $output) {
+
+		self::$cache[$hash] = $output;
+
+	}
+
 
 }
