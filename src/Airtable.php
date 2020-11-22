@@ -82,11 +82,60 @@ class Airtable {
 			$this->options->template = file_get_contents(AM_BASE_DIR . $this->options->template);
 		}
 		
+		$this->filter();
+
 		$output = $this->render();
 
 		AirtableRuntimeCache::save($hash, $output);
 
 		return $output;
+
+	}
+
+
+	/**
+	 *	Filters the main table for the items defined in $options->filters.
+	 */
+
+	private function filter() {
+
+		$table = $this->options->table;
+
+		$filters = array();
+
+		foreach ($this->options->filters as $filter) {
+
+			$value = Core\Request::query(str_replace(' ', '_', $filter));
+
+			if ($value) {
+				$filters[$filter] = $value;
+			}
+			
+		}
+
+		if (empty($filters)) {
+			return false;
+		}
+
+		$this->tables[$table] = array_filter($this->tables[$table], function($record) use ($filters) {
+
+			foreach ($filters as $filter => $value) {
+
+				if (!empty($record['fields'][$filter])) {
+					$match = preg_match("/{$value}/is", json_encode($record['fields'][$filter]));
+				} else {
+					$match = false;
+				}
+				
+				if (!$match) {
+					return false;
+				}
+
+			}
+
+			return true;
+
+		});
 
 	}
 
@@ -133,33 +182,9 @@ MST;
 		};
 	
 		foreach ($this->tables[$this->options->table] as $record) {
-
-			if (!empty($this->options->filters)) {
-
-				$match = false;
-
-				foreach ($this->options->filters as $filter) {
-
-					$value = Core\Request::query(str_replace(' ', '_', $filter));
-					$match = preg_match("/{$value}/is", json_encode($record['fields'][$filter]));
-
-					if (!$match) {
-						break;
-					}
-
-				}
-
-
-				if (!$match) {
-					continue;
-				}
-
-			}
-
 			$record['link'] = $link;
 			$record['with'] = $with;
 			$output .= $mst->render($this->options->template, $record);
-
 		}
 		
 		return $output;
