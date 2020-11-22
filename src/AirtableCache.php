@@ -53,7 +53,8 @@ class AirtableCache {
 
 	public function __construct($options) {
 
-		$hash = sha1("{$options->base}/{$options->table}/{$options->view}");
+		$linked = implode('/', $options->linked);
+		$hash = sha1("{$options->base}/{$options->table}/{$options->view}/{$linked}");
 		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable/' . $options->base;
 		$this->tablesFile = $this->cacheDir . '/' . $hash;
 		Core\FileSystem::makeDir($this->cacheDir);

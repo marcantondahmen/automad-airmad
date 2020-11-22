@@ -64,12 +64,14 @@ class Airtable {
 			'base' => false,
 			'table' => false,
 			'view' => false,
+			'linked' => false,
 			'template' => false,
 			'filters' => false
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
 		$this->options->filters = Core\Parse::csv($this->options->filters);
+		$this->options->linked = Core\Parse::csv($this->options->linked);
 
 		$cache = new AirtableCache($this->options);
 
@@ -151,7 +153,6 @@ class Airtable {
 		$mst = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
 		$output = '';
 
-		
 		$link = function($text, $helper) {
 			
 			preg_match('/(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is', $text, $matches);
@@ -204,14 +205,9 @@ MST;
 
 		$tables = array();
 		$tables[$this->options->table] = $this->requestAllRecords($this->options->table, $this->options->view);
-		$firstRecordFields = $tables[$this->options->table][0]['fields'];
-
-		foreach ($firstRecordFields as $key => $value) {
-
-			if ($records = $this->requestAllRecords($key)) {
-				$tables[$key] = $records;
-			}
-
+		
+		foreach ($this->options->linked as $key) {
+			$tables[$key] = $this->requestAllRecords($key);
 		}
 
 		return $tables;
