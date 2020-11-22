@@ -47,14 +47,12 @@ class Airtable {
 
 		$defaults = array(
 			'base' => false,
-			'tables' => false,
+			'table' => false,
 			'view' => false,
 			'template' => false
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
-		$this->options->tables = Core\Parse::csv($this->options->tables);
-		$this->activeTableName = $this->options->tables[0];
 
 		$cache = new AirtableCache($this->options);
 
@@ -112,7 +110,7 @@ MST;
 
 		};
 	
-		foreach ($this->tables[$this->activeTableName] as $record) {
+		foreach ($this->tables[$this->options->table] as $record) {
 
 			$data = $record['fields'];
 			$data['link'] = $link;
@@ -129,18 +127,14 @@ MST;
 	private function requestAllTables() {
 
 		$tables = array();
-		$i = 0;
-	
-		foreach ($this->options->tables as $tableName) {
+		$tables[$this->options->table] = $this->requestAllRecords($this->options->table, $this->options->view);
+		$firstRecordFields = $tables[$this->options->table][0]['fields'];
 
-			$view = false;
+		foreach ($firstRecordFields as $key => $value) {
 
-			if ($i == 0) {
-				$view = $this->options->view;
+			if ($records = $this->requestAllRecords($key)) {
+				$tables[$key] = $records;
 			}
-
-			$tables[$tableName] = $this->requestAllRecords($tableName, $view);
-			$i++;
 
 		}
 
@@ -149,8 +143,7 @@ MST;
 	}
 
 
-
-	private function requestAllRecords($table, $view) {
+	private function requestAllRecords($table, $view = false) {
 
 		$records = array();		
 		$url = "$this->apiUrl/{$this->options->base}/$table";
@@ -181,7 +174,9 @@ MST;
 				$offset = false;
 			}
 
-			$records = array_merge($records, $data['records']);
+			if (!empty($data['records'])) {
+				$records = array_merge($records, $data['records']);
+			}
 
 		}
 
