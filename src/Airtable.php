@@ -65,12 +65,11 @@ class Airtable {
 			'table' => false,
 			'view' => false,
 			'template' => false,
-			'searchValue' => false,
-			'searchFields' => false
+			'filters' => false
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
-		$this->options->searchFields = Core\Parse::csv($this->options->searchFields);
+		$this->options->filters = Core\Parse::csv($this->options->filters);
 
 		$cache = new AirtableCache($this->options);
 
@@ -109,11 +108,11 @@ class Airtable {
 			preg_match('/(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is', $text, $matches);
 
 			$text = <<< MST
-					{{# {$matches[1]} }}
+					{{# fields.{$matches[1]} }}
 						{{# with }}
 							{{.}} in {$matches[1]} => {$matches[2]}
 						{{/ with }}
-					{{/ {$matches[1]} }}
+					{{/ fields.{$matches[1]} }}
 MST;
 
 			return $helper->render($text);
@@ -128,20 +127,28 @@ MST;
 			$table = $this->tables[$matches[2]];
 			$template = str_replace(array('{%', '%}'), array('{{', '}}'), $matches[3]);
 			$key = array_search($record, array_column($table, 'id'));
-			$data = $table[$key];
 			
-			return $mst->render($template, $data['fields']);
+			return $mst->render($template, $table[$key]);
 
 		};
 	
 		foreach ($this->tables[$this->options->table] as $record) {
 
-			$data = $record['fields'];
-			
-			if ($this->options->searchValue && $this->options->searchFields) {
+			if (!empty($this->options->filters)) {
 
-				$searchData = array_intersect_key($data, array_flip($this->options->searchFields));
-				$match = preg_match("/{$this->options->searchValue}/is", json_encode(array_values($searchData)));
+				$match = false;
+
+				foreach ($this->options->filters as $filter) {
+
+					$value = Core\Request::query(str_replace(' ', '_', $filter));
+					$match = preg_match("/{$value}/is", json_encode($record['fields'][$filter]));
+
+					if (!$match) {
+						break;
+					}
+
+				}
+
 
 				if (!$match) {
 					continue;
@@ -149,9 +156,9 @@ MST;
 
 			}
 
-			$data['link'] = $link;
-			$data['with'] = $with;
-			$output .= $mst->render($this->options->template, $data);
+			$record['link'] = $link;
+			$record['with'] = $with;
+			$output .= $mst->render($this->options->template, $record);
 
 		}
 		
