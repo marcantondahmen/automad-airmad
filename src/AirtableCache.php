@@ -39,28 +39,29 @@ class AirtableCache {
 
 
 	/**
-	 *	The cache file for the current instance base on a configuration hash.
+	 *	The cache file for the table records.
 	 */
 
-	private $tablesFile = false;
+	private $cacheFile = false;
 
 
 	/**
-	 *	The cache constructor. An instance identifies a cache file by a hash of its configuration.
+	 *	The cache constructor. An instance identifies a cache file by a hash of base/table/view.
 	 *
-	 *	@param array $options
+	 *	@param array $base
+	 *	@param array $table
+	 *	@param array $view
 	 */
 
-	public function __construct($options) {
+	public function __construct($base, $table, $view) {
 
-		$linked = implode('/', $options->linked);
-		$hash = sha1("{$options->base}/{$options->table}/{$options->view}/{$linked}");
-		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable/' . $options->base;
-		$this->tablesFile = $this->cacheDir . '/' . $hash;
+		$hash = sha1("{$base}/{$table}/{$view}");
+		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable';
+		$this->cacheFile = $this->cacheDir . '/' . $hash;
 		Core\FileSystem::makeDir($this->cacheDir);
 
-		if (is_readable($this->tablesFile)) {
-			$mTime = filemtime($this->tablesFile);
+		if (is_readable($this->cacheFile)) {
+			$mTime = filemtime($this->cacheFile);
 		} else {
 			$mTime = 0;
 		}
@@ -75,7 +76,7 @@ class AirtableCache {
 
 
 	/**
-	 *	Loads a the cached tables from the cache.
+	 *	Loads a the cached table records from the cache.
 	 *
 	 *	@return array The unserialized tables array
 	 */
@@ -86,20 +87,20 @@ class AirtableCache {
 			return false;
 		}
 
-		return unserialize(file_get_contents($this->tablesFile));
+		return unserialize(file_get_contents($this->cacheFile));
 
 	}
 
 
 	/**
-	 *	Saves the serialized tables array to the cache. 
+	 *	Saves the serialized table records array to the cache. 
 	 *
-	 *	@param array $tables
+	 *	@param array $records
 	 */
 
-	public function save($tables) {
+	public function save($records) {
 
-		Core\FileSystem::write($this->tablesFile, serialize($tables));
+		Core\FileSystem::write($this->cacheFile, serialize($records));
 
 	}
 

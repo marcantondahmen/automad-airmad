@@ -73,12 +73,7 @@ class Airtable {
 		$this->options->filters = Core\Parse::csv($this->options->filters);
 		$this->options->linked = Core\Parse::csv($this->options->linked);
 
-		$cache = new AirtableCache($this->options);
-
-		if (!$this->tables = $cache->load()) {
-			$this->tables = $this->requestAllTables();
-			$cache->save($this->tables);
-		}
+		$this->tables = $this->getTables();
 
 		if (is_readable(AM_BASE_DIR . $this->options->template)) {
 			$this->options->template = file_get_contents(AM_BASE_DIR . $this->options->template);
@@ -194,20 +189,18 @@ MST;
 	
 
 	/**
-	 *	Requests all tables from the API. The first table to be requested is $options->table.
-	 *	After downloading that table, all fields of the first record are tested for linked tables that 
-	 *	will be then downloaded as well.
+	 *	Get all required tables including the linked ones. 
 	 *
 	 *	@return array The tables array.
 	 */
 
-	private function requestAllTables() {
+	private function getTables() {
 
 		$tables = array();
-		$tables[$this->options->table] = $this->requestAllRecords($this->options->table, $this->options->view);
+		$tables[$this->options->table] = $this->getRecords($this->options->table, $this->options->view);
 		
 		foreach ($this->options->linked as $key) {
-			$tables[$key] = $this->requestAllRecords($key);
+			$tables[$key] = $this->getRecords($key);
 		}
 
 		return $tables;
@@ -222,7 +215,13 @@ MST;
 	 *	@param string $view
 	 */
 
-	private function requestAllRecords($table, $view = false) {
+	private function getRecords($table, $view = false) {
+
+		$cache = new AirtableCache($this->options->base, $table, $view);
+
+		if ($records = $cache->load()) {
+			return $records;
+		}
 
 		$records = array();		
 		$url = "$this->apiUrl/{$this->options->base}/$table";
@@ -258,6 +257,8 @@ MST;
 			}
 
 		}
+
+		$cache->save($records);
 
 		return $records;
 
