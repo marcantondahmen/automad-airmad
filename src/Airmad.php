@@ -67,12 +67,16 @@ class Airmad {
 			'linked' => false,
 			'template' => false,
 			'filters' => false,
+			'limit' => 20,
+			'page' => 1,
 			'prefix' => ':airmad'
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
 		$this->options->filters = Core\Parse::csv($this->options->filters);
 		$this->options->linked = Core\Parse::csv($this->options->linked);
+		$this->options->limit = intval($this->options->limit);
+		$this->options->page = intval($this->options->page);
 
 		$this->tables = $this->getTables();
 
@@ -82,17 +86,24 @@ class Airmad {
 		
 		$this->filter();
 
+		$count = count($this->tables[$this->options->table]);
+
+		$this->slice();
+
 		$output = $this->render();
-
-		AirmadRuntime::register($hash);
-
-		$this->tables = NULL;
 
 		$Toolbox = new Core\Toolbox($Automad);
 	
 		$Toolbox->set(array(
-			"{$this->options->prefix}Output" => $output
+			"{$this->options->prefix}Output" => $output,
+			"{$this->options->prefix}Memory" => memory_get_peak_usage(),
+			"{$this->options->prefix}Count" => $count,
+			"{$this->options->prefix}Page" => $this->options->page,
+			"{$this->options->prefix}Pages" => ceil($count / $this->options->limit)
 		));
+
+		AirmadRuntime::register($hash);
+		$this->tables = NULL;
 
 	}
 
@@ -306,6 +317,23 @@ MST;
 		curl_close($curl);
 
 		return $data;
+
+	}
+
+
+	/**
+	 *	Slices the main records array of the main table to fit the pagination settings.
+	 */
+
+	private function slice() {
+
+		$offset = ($this->options->page - 1) * $this->options->limit;
+		
+		$this->tables[$this->options->table] = array_slice(
+			$this->tables[$this->options->table],
+			$offset,
+			$this->options->limit
+		);
 
 	}
 
