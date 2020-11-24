@@ -1,6 +1,6 @@
 <?php
 /**
- *	Automad Airtable
+ *	Automad Airmad
  *
  *	An Airtable integration for Automad.
  *
@@ -14,7 +14,7 @@ namespace Automad;
 defined('AUTOMAD') or die('Direct access not permitted!');
 
 
-class AirtableRuntimeCache {
+class AirmadRuntimeCache {
 
 
 	/**

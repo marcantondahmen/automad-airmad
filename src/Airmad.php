@@ -1,6 +1,6 @@
 <?php
 /**
- *	Automad Airtable
+ *	Automad Airmad
  *
  *	An Airtable integration for Automad.
  *
@@ -14,7 +14,7 @@ namespace Automad;
 defined('AUTOMAD') or die('Direct access not permitted!');
 
 
-class Airtable {
+class Airmad {
 
 
 	/**
@@ -46,11 +46,11 @@ class Airtable {
 	 *	@return string the output of the extension
 	 */
 
-	public function Airtable($options, $Automad) {
+	public function Airmad($options, $Automad) {
 
 		$hash = sha1(json_encode($options));
 
-		if ($output = AirtableRuntimeCache::load($hash)) {
+		if ($output = AirmadRuntimeCache::load($hash)) {
 			return $output;
 		}
 
@@ -83,7 +83,7 @@ class Airtable {
 
 		$output = $this->render();
 
-		AirtableRuntimeCache::save($hash, $output);
+		AirmadRuntimeCache::save($hash, $output);
 
 		return $output;
 
@@ -217,7 +217,7 @@ MST;
 
 	private function getRecords($table, $view = false) {
 
-		$cache = new AirtableCache($this->options->base, $table, $view);
+		$cache = new AirmadCache($this->options->base, $table, $view);
 
 		if ($records = $cache->load()) {
 			return $records;
