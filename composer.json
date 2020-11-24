@@ -1,5 +1,5 @@
 {
-	"name": "automad/airtable",
+	"name": "automad/airmad",
 	"description": "An Airtable integration for Automad.",
 	"type": "automad-package",
 	"keywords": ["extension", "airtable"],
