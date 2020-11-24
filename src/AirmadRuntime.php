@@ -14,41 +14,40 @@ namespace Automad;
 defined('AUTOMAD') or die('Direct access not permitted!');
 
 
-class AirmadRuntimeCache {
+class AirmadRuntime {
 
 
 	/**
-	 *	The runtime cache array.
+	 *	The runtime hash array.
 	 */
 	
-	private static $cache = array();
+	private static $hashes = array();
 	
 	
 	/**
-	 *	Load the cached output for a given configuration hash.
+	 *	Checks if an instance is registered
 	 *
 	 *	@param string $hash
 	 *	@return string The cached output if existing.
 	 */
 
-	public static function load($hash) {
+	public static function isRegistered($hash) {
 
-		if (array_key_exists($hash, self::$cache)) {
-			return self::$cache[$hash];
+		if (array_key_exists($hash, self::$hashes)) {
+			return true;
 		}
 		
 	}
 
 
 	/**
-	 *	Save a generated output for a given configuration to the runtimecache array.
+	 *	Registers a Airmad instance by hash to prevent multiple executions.
 	 *
 	 *	@param string $hash
-	 *	@param string $output
 	 */
-	public static function save($hash, $output) {
+	public static function register($hash) {
 
-		self::$cache[$hash] = $output;
+		self::$hashes[$hash] = true;
 
 	}
 

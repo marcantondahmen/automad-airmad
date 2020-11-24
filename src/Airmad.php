@@ -50,8 +50,8 @@ class Airmad {
 
 		$hash = sha1(json_encode($options));
 
-		if ($output = AirmadRuntimeCache::load($hash)) {
-			return $output;
+		if (AirmadRuntime::isRegistered($hash)) {
+			return false;
 		}
 
 		if (!defined('AIRTABLE_TOKEN')) {
@@ -66,7 +66,8 @@ class Airmad {
 			'view' => false,
 			'linked' => false,
 			'template' => false,
-			'filters' => false
+			'filters' => false,
+			'prefix' => ':airmad'
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
@@ -83,9 +84,15 @@ class Airmad {
 
 		$output = $this->render();
 
-		AirmadRuntimeCache::save($hash, $output);
+		AirmadRuntime::register($hash);
 
-		return $output;
+		$this->tables = NULL;
+
+		$Toolbox = new Core\Toolbox($Automad);
+	
+		$Toolbox->set(array(
+			"{$this->options->prefix}Output" => $output
+		));
 
 	}
 
