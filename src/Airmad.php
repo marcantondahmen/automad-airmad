@@ -96,7 +96,7 @@ class Airmad {
 	
 		$Toolbox->set(array(
 			"{$this->options->prefix}Output" => $output,
-			"{$this->options->prefix}Memory" => memory_get_peak_usage(),
+			"{$this->options->prefix}Memory" => memory_get_peak_usage(true),
 			"{$this->options->prefix}Count" => $count,
 			"{$this->options->prefix}Page" => $this->options->page,
 			"{$this->options->prefix}Pages" => ceil($count / $this->options->limit)
@@ -182,6 +182,20 @@ MST;
 
 		};
 
+		$equals = function($text, $helper) {
+
+			$regex = '/\s*([\w_\-\+]+)\s*\=\s*([\{\}\w_\-\+]+)\s*\:(.*)/s';
+			preg_match($regex, $helper->render($text), $matches);
+			
+			if (!empty($matches)) {
+				
+				if (trim($matches[1]) == trim($matches[2])) {
+					return $matches[3];
+				}
+			}
+
+		};
+
 		$with = function($text, $helper) use ($mst) {
 
 			$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is';
@@ -197,6 +211,7 @@ MST;
 	
 		foreach ($this->tables[$this->options->table] as $record) {
 			$record['link'] = $link;
+			$record['equals'] = $equals;
 			$record['with'] = $with;
 			$output .= $mst->render($this->options->template, $record);
 		}
