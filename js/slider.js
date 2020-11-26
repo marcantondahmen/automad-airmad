@@ -16,6 +16,10 @@
 
 			var items = container.querySelectorAll('.airmad-slider-item');
 
+			if (items.length > 0) {
+				items[0].classList.add('active');
+			}
+
 			if (items.length > 1) {
 
 				var prev = document.createElement('a'),
@@ -77,7 +81,6 @@
 
 					};
 
-				items[0].classList.add('active');
 				prev.classList.add('airmad-slider-prev');
 				next.classList.add('airmad-slider-next');
 				container.appendChild(prev);
