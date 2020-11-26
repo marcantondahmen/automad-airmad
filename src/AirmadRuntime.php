@@ -1,6 +1,6 @@
 <?php
 /**
- *	Automad Airmad
+ *	Airmad
  *
  *	An Airtable integration for Automad.
  *

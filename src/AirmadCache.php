@@ -1,6 +1,6 @@
 <?php
 /**
- *	Automad Airmad
+ *	Airmad
  *
  *	An Airtable integration for Automad.
  *
@@ -56,7 +56,7 @@ class AirmadCache {
 	public function __construct($base, $table, $view) {
 
 		$hash = sha1("{$base}/{$table}/{$view}");
-		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airtable';
+		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airmad';
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
 		Core\FileSystem::makeDir($this->cacheDir);
 
