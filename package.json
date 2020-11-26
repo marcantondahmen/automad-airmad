@@ -1,0 +1,22 @@
+{
+  "name": "airmad",
+  "version": "1.0.0",
+  "description": "Airtable in Automad",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcantondahmen/automad-airmad.git"
+  },
+  "author": "Marc Anton Dahmen",
+  "license": "MIT",
+  "homepage": "https://github.com/marcantondahmen/automad-airmad#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^4.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify-es": "^2.0.0",
+    "gulp-util": "^3.0.8"
+  }
+}
