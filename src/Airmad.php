@@ -163,9 +163,9 @@ class Airmad {
 
 	private function render() {
 
-		$mst = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
+		
 		$output = '';
-		$lambdas = array(
+		$helpers = array(
 
 			'link' => function($text, $helper) {
 			
@@ -215,7 +215,11 @@ MST;
 
 			'helpers' => array(
 
-				'linkedField' => function($text, $helper) use ($mst) {
+				'linkedField' => function($text, $helper) {
+
+					$mst = new \Mustache_Engine(array(
+						'entity_flags' => ENT_QUOTES
+					));
 
 					$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is';
 					preg_match($regex, $helper->render($text), $matches);
@@ -231,9 +235,13 @@ MST;
 			)
 
 		);
+
+		$mst = new \Mustache_Engine(array(
+			'entity_flags' => ENT_QUOTES,
+			'helpers' => array('@' => $helpers)
+		));
 	
 		foreach ($this->tables[$this->options->table] as $record) {
-			$record['@'] = $lambdas;
 			$output .= $mst->render($this->options->template, $record);
 		}
 		
