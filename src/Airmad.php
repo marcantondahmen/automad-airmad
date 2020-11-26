@@ -165,54 +165,75 @@ class Airmad {
 
 		$mst = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
 		$output = '';
+		$lambdas = array(
 
-		$link = function($text, $helper) {
+			'link' => function($text, $helper) {
 			
-			preg_match('/(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is', $text, $matches);
+				preg_match('/(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is', $text, $matches);
 
-			$text = <<< MST
-					{{# fields.{$matches[1]} }}
-						{{# with }}
-							{{.}} in {$matches[1]} => {$matches[2]}
-						{{/ with }}
-					{{/ fields.{$matches[1]} }}
+				$text = <<< MST
+						{{# fields.{$matches[1]} }}
+							{{# @.helpers.linkedField }}
+								{{.}} in {$matches[1]} => {{={% %}=}}{$matches[2]}{%={{ }}=%}
+							{{/ @.helpers.linkedField }}
+						{{/ fields.{$matches[1]} }}
 MST;
 
-			return $helper->render($text);
+				return $helper->render($text);
 
-		};
+			},
 
-		$equals = function($text, $helper) {
+			'equals' => function($text, $helper) {
 
-			$regex = '/\s*([\w_\-\+]+)\s*\=\s*([\{\}\w_\-\+]+)\s*\:(.*)/s';
-			preg_match($regex, $helper->render($text), $matches);
-			
-			if (!empty($matches)) {
+				$regex = '/\s*([\w_\-\+]+)\s*\=\s*([\{\}\w_\-\+]+)\s*\:(.*)/s';
+				preg_match($regex, $helper->render($text), $matches);
 				
-				if (trim($matches[1]) == trim($matches[2])) {
-					return $matches[3];
+				if (!empty($matches)) {
+					
+					if (trim($matches[1]) == trim($matches[2])) {
+						return $matches[3];
+					}
 				}
-			}
 
-		};
+			},
 
-		$with = function($text, $helper) use ($mst) {
+			'slider' => function($field, $helper) {
 
-			$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is';
-			preg_match($regex, $helper->render($text), $matches);
-			$record = $matches[1];
-			$table = $this->tables[$matches[2]];
-			$template = str_replace(array('{%', '%}'), array('{{', '}}'), $matches[3]);
-			$key = array_search($record, array_column($table, 'id'));
-			
-			return $mst->render($template, $table[$key]);
+				$template = <<< MST
+							<div class="airmad-slider" data-airmad-slider>
+								{{# $field }}
+									<div class="airmad-slider-item">
+										<img src="{{ thumbnails.large.url }}">
+									</div>
+								{{/ $field }}
+							</div>
+MST;
+	
+				return $helper->render($template);
 
-		};
+			},
+
+			'helpers' => array(
+
+				'linkedField' => function($text, $helper) use ($mst) {
+
+					$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is';
+					preg_match($regex, $helper->render($text), $matches);
+					$record = $matches[1];
+					$table = $this->tables[$matches[2]];
+					$template = $matches[3];
+					$key = array_search($record, array_column($table, 'id'));
+					
+					return $mst->render($template, $table[$key]);
+
+				}
+
+			)
+
+		);
 	
 		foreach ($this->tables[$this->options->table] as $record) {
-			$record['link'] = $link;
-			$record['equals'] = $equals;
-			$record['with'] = $with;
+			$record['@'] = $lambdas;
 			$output .= $mst->render($this->options->template, $record);
 		}
 		
