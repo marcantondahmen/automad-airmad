@@ -8,12 +8,12 @@ An [Airtable](https://airtable.com) integration for [Automad](https://automad.or
 - [Introduction](#introduction)
 - [Configuration](#configuration)
 - [Usage](#usage)
-	- [Options](#options)
-	- [Runtime Variables](#runtime-variables)
-	- [Using Multiple Instances](#using-multiple-instances)
+  - [Options](#options)
+  - [Runtime Variables](#runtime-variables)
+  - [Using Multiple Instances](#using-multiple-instances)
 - [Templates](#templates)
-	- [Image Sliders](#image-sliders)
-	- [Record Data in Linked Tables](#record-data-in-linked-tables)
+  - [Image Sliders](#image-sliders)
+  - [Record Data in Linked Tables](#record-data-in-linked-tables)
 
 ## Introduction
 
@@ -23,45 +23,45 @@ Airtable is a great tool to quickly create your own database using a intuitive U
 
 Airtable requires an [API](https://airtable.com/api) token to authenticate when accessing bases using their REST API. In case you don't have one, you can easily create one on your Airtable profile page. After successfully creating such token, it has to be added to Automad's `config/config.php` file. That can be done by navigating to **System Settings > More > Edit Configuration File** in the Automad dashboard as demonstrated below. Aside from the authentictaion, there you can also configure the Airtable cache lifetime in seconds.
 
-	{
-		"AIRMAD_TOKEN": "keyXXXXXXXXXXXXXX",
-		"AIRMAD_CACHE_LIFETIME": 43200
-		...
-	}
+    {
+        "AIRMAD_TOKEN": "keyXXXXXXXXXXXXXX",
+        "AIRMAD_CACHE_LIFETIME": 43200
+        ...
+    }
 
 ## Usage
 
 Airmad can either be used in template files as part of a theme or, as recommended, in a snippet block. The latter one allows for integrating Airmad into any existing theme that supports Automad's block editor. The markup looks as follows:
 
-	<@ Automad/Airmad {
-		base: 'appXXXXXXXXXXXXXX',
-		table: 'Products',
-		view: 'Grid view',
-		linked: 'Type',
-		template: '
-			<div class="card">
-				<div class="card-content uk-panel uk-panel-box">
-					<div class="uk-panel-title">
-						{{ fields.Name }}
-					</div>
-					<p>
-						{{# fields.@.Type }}
-							<i>{{ Name }}</i>
-						{{/ fields.@.Type }}
-					</p>
-				</div>
-			</div>
-		',
-		filters: 'Name, Type',
-		limit: 20,
-		page: @{ ?page | 1 }
-	} @>
+    <@ Automad/Airmad {
+        base: 'appXXXXXXXXXXXXXX',
+        table: 'Products',
+        view: 'Grid view',
+        linked: 'Type',
+        template: '
+            <div class="card">
+                <div class="card-content uk-panel uk-panel-box">
+                    <div class="uk-panel-title">
+                        {{ fields.Name }}
+                    </div>
+                    <p>
+                        {{# fields.@.Type }}
+                            <i>{{ Name }}</i>
+                        {{/ fields.@.Type }}
+                    </p>
+                </div>
+            </div>
+        ',
+        filters: 'Name, Type',
+        limit: 20,
+        page: @{ ?page | 1 }
+    } @>
 
 The code above doesn't produce any output. Instead it populates some runtime [variables](#runtime-variables) that can be used in the Automad template to at any point after the Airmad instance above. To display the generated output, the `:airmadOutput` variable can be used in a template for example as follows.
 
-	<div class="cards grid am-stretched">
-		@{ :airmadOutput }
-	</div>
+    <div class="cards grid am-stretched">
+        @{ :airmadOutput }
+    </div>
 
 ### Options
 
@@ -111,15 +111,15 @@ In case you have fields that actually link to other tables in your base, the con
 
 To simply get the IDs of the records in a linked table, you can just loop over the list of IDs as usual.
 
-	{{# fields.Type }}
-		{{ . }}
-	{{/ fields.Type }}
+    {{# fields.Type }}
+        {{ . }}
+    {{/ fields.Type }}
 
 Instead of just getting the ID, you can directly loop over a list of the linked records by replacing `{{# fields.Type }}` with `{{# fields.@.Type }}`. Note the `@` in the variable name.
 
-	{{# fields.@.Type }}
-		<i>{{ Name }}</i>
-	{{/ fields.@.Type }}
+    {{# fields.@.Type }}
+        <i>{{ Name }}</i>
+    {{/ fields.@.Type }}
 
 ---
 
