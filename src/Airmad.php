@@ -9,8 +9,9 @@
  *	@license MIT license
  */
 
-namespace Automad;
+namespace Airmad;
 use Handlebars\Handlebars;
+use Automad\Core;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 

@@ -4,7 +4,6 @@
 
 An [Airtable](https://airtable.com) integration for [Automad](https://automad.org). Airmad let's you easily pull and integrate records from any Airtable database. Record data can be rendered using [Handlebars](https://handlebarsjs.com) templates.
 
-
 - [Introduction](#introduction)
 - [Configuration](#configuration)
 - [Usage](#usage)
@@ -33,7 +32,7 @@ Airtable requires an [API](https://airtable.com/api) token to authenticate when 
 
 Airmad can either be used in template files as part of a theme or, as recommended, in a snippet block. The latter one allows for integrating Airmad into any existing theme that supports Automad's block editor. The markup looks as follows:
 
-    <@ Automad/Airmad {
+    <@ Airmad/Airmad {
         base: 'appXXXXXXXXXXXXXX',
         table: 'Products',
         view: 'Grid view',

@@ -9,7 +9,7 @@
  *	@license MIT license
  */
 
-namespace Automad;
+namespace Airmad;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
