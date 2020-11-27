@@ -10,6 +10,7 @@
  */
 
 namespace Automad;
+use Handlebars\Handlebars;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
@@ -54,11 +55,11 @@ class Airmad {
 			return false;
 		}
 
-		if (!defined('AIRTABLE_TOKEN')) {
-			return 'AIRTABLE_TOKEN not defined!';
+		if (!defined('AIRMAD_TOKEN')) {
+			return 'AIRMAD_TOKEN not defined!';
 		}
 
-		$this->token = AIRTABLE_TOKEN;
+		$this->token = AIRMAD_TOKEN;
 
 		$defaults = array(
 			'base' => false,
@@ -84,6 +85,7 @@ class Airmad {
 			$this->options->template = file_get_contents(AM_BASE_DIR . $this->options->template);
 		}
 		
+		$this->link();
 		$this->filter();
 
 		$count = count($this->tables[$this->options->table]);
@@ -104,6 +106,42 @@ class Airmad {
 
 		AirmadRuntime::register($hash);
 		$this->tables = NULL;
+
+	}
+
+
+	/**
+	 *	Links records of linked tables.
+	 */
+
+	private function link() {
+	
+		array_walk($this->tables[$this->options->table], function(&$record) {
+
+			$linked = array();
+
+			foreach ($record->fields as $tableName => $ids) {
+
+				if (in_array($tableName, $this->options->linked)) {
+
+					$fields = array();
+
+					foreach ($ids as $id) {
+						$key = array_search($id, array_column($this->tables[$tableName], 'id'));
+						$fields[] = $this->tables[$tableName][$key]->fields;
+					}
+
+					$linked[$tableName] = $fields;
+					$fields = NULL;
+
+				}
+
+			}
+			
+			$record->fields->{'@'} = (object) $linked;
+			$linked = NULL;
+
+		});
 
 	}
 
@@ -136,8 +174,8 @@ class Airmad {
 
 			foreach ($filters as $filter => $value) {
 
-				if (!empty($record['fields'][$filter])) {
-					$match = preg_match("/{$value}/is", json_encode($record['fields'][$filter]));
+				if (!empty($record->fields->$filter)) {
+					$match = preg_match("/{$value}/is", json_encode($record->fields->$filter));
 				} else {
 					$match = false;
 				}
@@ -163,86 +201,33 @@ class Airmad {
 
 	private function render() {
 
-		
 		$output = '';
-		$helpers = array(
+		$handlebars = new Handlebars();
+		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
 
-			'link' => function($text, $helper) {
-			
-				preg_match('/(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is', $text, $matches);
+			$images = $context->get($args);
+			$output = '<div class="airmad-slider" data-airmad-slider>';
 
-				$text = <<< MST
-						{{# fields.{$matches[1]} }}
-							{{# @.helpers.linkedField }}
-								{{.}} in {$matches[1]} => {{={% %}=}}{$matches[2]}{%={{ }}=%}
-							{{/ @.helpers.linkedField }}
-						{{/ fields.{$matches[1]} }}
-MST;
-
-				return $helper->render($text);
-
-			},
-
-			'equals' => function($text, $helper) {
-
-				$regex = '/\s*([\w_\-\+]+)\s*\=\s*([\{\}\w_\-\+]+)\s*\:(.*)/s';
-				preg_match($regex, $helper->render($text), $matches);
+			if (!empty($images) && is_array($images)) {
 				
-				if (!empty($matches)) {
-					
-					if (trim($matches[1]) == trim($matches[2])) {
-						return $matches[3];
-					}
+				foreach ($images as $image) {
+					$output .= <<< HTML
+								<div class="airmad-slider-item">
+									<img src="{$image->thumbnails->large->url}">
+								</div>	
+HTML;
 				}
 
-			},
+			}
 
-			'slider' => function($field, $helper) {
+			$output .= '</div>';
 
-				$template = <<< MST
-							<div class="airmad-slider" data-airmad-slider>
-								{{# $field }}
-									<div class="airmad-slider-item">
-										<img src="{{ thumbnails.large.url }}">
-									</div>
-								{{/ $field }}
-							</div>
-MST;
-	
-				return $helper->render($template);
+			return $output;
 
-			},
+		});
 
-			'helpers' => array(
-
-				'linkedField' => function($text, $helper) {
-
-					$mst = new \Mustache_Engine(array(
-						'entity_flags' => ENT_QUOTES
-					));
-
-					$regex = '/(\w+?)\s+in\s+(\w[\w\s\-]+\w)\s*=\>\s*(.*)/is';
-					preg_match($regex, $helper->render($text), $matches);
-					$record = $matches[1];
-					$table = $this->tables[$matches[2]];
-					$template = $matches[3];
-					$key = array_search($record, array_column($table, 'id'));
-					
-					return $mst->render($template, $table[$key]);
-
-				}
-
-			)
-
-		);
-
-		$mst = new \Mustache_Engine(array(
-			'entity_flags' => ENT_QUOTES,
-			'helpers' => array('@' => $helpers)
-		));
-	
 		foreach ($this->tables[$this->options->table] as $record) {
-			$output .= $mst->render($this->options->template, $record);
+			$output .= $handlebars->render($this->options->template, $record);
 		}
 		
 		return $output;
@@ -308,14 +293,14 @@ MST;
 
 			$data = $this->request("$url?$queryString");
 
-			if (isset($data['offset'])) {
-				$offset = $data['offset'];
+			if (isset($data->offset)) {
+				$offset = $data->offset;
 			} else {
 				$offset = false;
 			}
 
-			if (!empty($data['records'])) {
-				$records = array_merge($records, $data['records']);
+			if (!empty($data->records)) {
+				$records = array_merge($records, $data->records);
 			}
 
 		}
@@ -355,7 +340,7 @@ MST;
 		$output = curl_exec($curl);
 		
 		if (curl_getinfo($curl, CURLINFO_HTTP_CODE) == 200 && !curl_errno($curl)) {	
-			$data = json_decode($output, true);
+			$data = json_decode($output);
 		}
 		
 		curl_close($curl);
