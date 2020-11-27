@@ -55,6 +55,13 @@ class AirmadCache {
 
 	public function __construct($base, $table, $view) {
 
+		if (defined('AIRMAD_CACHE_LIFETIME')) {
+			$this->lifeTime = AIRMAD_CACHE_LIFETIME;
+		}
+
+		Core\Debug::log($this->lifeTime, 'Airmad cache lifetime');
+		Core\Debug::log("{$base} > {$table} > {$view}", 'New Airmad cache instance for');
+
 		$hash = sha1("{$base}/{$table}/{$view}");
 		$this->cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airmad';
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
@@ -87,6 +94,7 @@ class AirmadCache {
 			return false;
 		}
 
+		Core\Debug::log('Loading data from cache');
 		return unserialize(file_get_contents($this->cacheFile));
 
 	}
@@ -100,6 +108,7 @@ class AirmadCache {
 
 	public function save($records) {
 
+		Core\Debug::log('Saving data to cache');
 		Core\FileSystem::write($this->cacheFile, serialize($records));
 
 	}
