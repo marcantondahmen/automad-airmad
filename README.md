@@ -13,6 +13,7 @@ An [Airtable](https://airtable.com) integration for [Automad](https://automad.or
 - [Templates](#templates)
   - [Image Sliders](#image-sliders)
   - [Record Data in Linked Tables](#record-data-in-linked-tables)
+  - [Active or Selected Filters](#active-or-selected-filters)
 
 ## Introduction
 
@@ -119,6 +120,14 @@ Instead of just getting the ID, you can directly loop over a list of the linked 
     {{# fields.@.Type }}
         <i>{{ Name }}</i>
     {{/ fields.@.Type }}
+
+### Active or Selected Filters
+
+When building dropdown menus or similar to filter the set of elements, it is imortant to know what filter is currently active. Therefore Airmad the `active` field to any record that appears as value for a table filter in the query string. The field can be used as follows:
+
+    <option value="{{ id }}" {{#if active}}selected{{/if}}>
+        {{ fields.Name }}
+    </option>
 
 ---
 
