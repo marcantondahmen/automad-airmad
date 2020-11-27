@@ -55,7 +55,7 @@ gulp.task('airmad-less', function () {
 			rebase: false
 		};
 
-	return gulp.src('less/*.less')
+	return gulp.src('less/airmad.less')
 		.pipe(less())
 		.on('error', onError)
 		.pipe(autoprefixer({ grid: false }))
