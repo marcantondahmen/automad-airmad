@@ -3,6 +3,10 @@ html.landing .rst-content h1 {
 	font-weight: 780 !important;
 }
 
+html.landing .headerlink {
+	display: none !important;
+}
+
 .wy-menu-vertical {
 	padding-top: 0 !important;
 }
