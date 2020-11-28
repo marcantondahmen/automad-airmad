@@ -31,7 +31,8 @@ author = 'Marc Anton Dahmen'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-	'sphinxext.opengraph'
+	'sphinxext.opengraph',
+	'recommonmark'
 ]
 
 # Open Graph extension config. https://pypi.org/project/sphinxext-opengraph/
