@@ -17,6 +17,7 @@ Airmad
    :hidden:
    :maxdepth: 2
    
+   Airmad <https://airmad.readthedocs.io>
    get-started
    usage
    templates
