@@ -25,7 +25,7 @@ Airtable requires an [API](https://airtable.com/api) token to authenticate when 
 
     {
         "AIRMAD_TOKEN": "keyXXXXXXXXXXXXXX",
-        "AIRMAD_CACHE_LIFETIME": 43200
+        "AIRMAD_CACHE_LIFETIME": 43200,
         ...
     }
 
