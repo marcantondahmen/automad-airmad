@@ -103,7 +103,9 @@ Aside from the default tags, Airmad provides some other useful helpers to let yo
 
 ### Image Sliders
 
-In case your table has an attachement field, you can use the `{{#slider fields.images}}` helper function to create an image slider containing all provided images as that are listed in a field called `fields.images`.
+In case your table has an attachement field, you can use the `{{#slider fields.images}}` helper function to create an image slider containing all provided images as that are listed in a field called `fields.images`. By default the slide will have an aspect ratio of 1:1 &mdash; in other words a height of 100% relative to the width. You can pass an optional second argument to the helper to define a custom height as follows:
+
+    {{#slider fields.images 75%}}
 
 ### Record Data in Linked Tables
 
