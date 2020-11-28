@@ -22,12 +22,13 @@ html.landing .headerlink {
 pre,
 code {
 	font-weight: 400;
-	font-size: 0.92rem !important;
+	font-size: 0.94rem !important;
 	line-height: 1.6 !important;
 }
 
 .landing .buttons.container .reference {
 	font-size: 1.5rem;
+	font-weight: 500;
 }
 
 .landing .buttons.container .reference:first-child:not(:hover) {
