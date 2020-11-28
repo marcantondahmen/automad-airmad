@@ -248,22 +248,35 @@ class Airmad {
 		$handlebars = new Handlebars();
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
 
-			$images = $context->get($args);
-			$output = '<div class="airmad-slider" data-airmad-slider>';
 
-			if (!empty($images) && is_array($images)) {
-				
-				foreach ($images as $image) {
-					$output .= <<< HTML
-								<div class="airmad-slider-item">
-									<img src="{$image->thumbnails->large->url}">
-								</div>	
-HTML;
+			$argsArray = preg_split('/\s+/', $args);
+
+			if (!empty($argsArray[0])) {
+
+				$images = $context->get($argsArray[0]);
+				$padding = '';
+
+				if (!empty($argsArray[1])) {
+					$padding = ' style="--airmad-slider-padding-top:' . $argsArray[1] . ';"';
 				}
 
-			}
+				$output = '<div class="airmad-slider"' . $padding . ' data-airmad-slider>';
 
-			$output .= '</div>';
+				if (!empty($images) && is_array($images)) {
+					
+					foreach ($images as $image) {
+						$output .= <<< HTML
+									<div class="airmad-slider-item">
+										<img src="{$image->thumbnails->large->url}">
+									</div>	
+	HTML;
+					}
+
+				}
+
+				$output .= '</div>';
+
+			}			
 
 			return $output;
 
