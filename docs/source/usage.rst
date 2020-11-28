@@ -5,6 +5,11 @@ Airmad can either be used in template files as part of a theme or, as recommende
 in a snippet block. The latter one allows for integrating Airmad into any existing 
 theme that supports Automad's block editor. The markup looks as follows:
 
+.. attention::
+
+    You can simply paste an Airmad snippet directly into a code field of the new 
+    **Template Snippet** block on any page in the Automad dashboard. 
+
 .. code-block:: 
    :linenos:
 
