@@ -11,7 +11,7 @@ Airtable is a great tool to quickly create your own database using a intuitive U
 
 ## Documentation
 
-Take a look at the Airmad [documentation](https://airmad.readthedocs.io) for more details on how to integrate Airtable bases, build filter menus and slideshows.
+Take a look at the full Airmad [documentation](https://airmad.readthedocs.io) for more information on how to integrate Airtable bases, build filter menus and slideshows.
 
 ---
 
