@@ -205,8 +205,20 @@ class Airmad {
 
 			foreach ($filters as $filter => $value) {
 
+				$fieldStr = '';
+
+				// Search in record ID array.
 				if (!empty($record->fields->$filter)) {
-					$match = preg_match("/{$value}/is", json_encode($record->fields->$filter));
+					$fieldStr = json_encode($record->fields->$filter);
+				}
+
+				// Also search in linked table values.
+				if (!empty($record->fields->{'@'}->$filter)) {
+					$fieldStr .= json_encode($record->fields->{'@'}->$filter);
+				}
+
+				if ($fieldStr) {
+					$match = preg_match("/{$value}/is", $fieldStr);
 				} else {
 					$match = false;
 				}
