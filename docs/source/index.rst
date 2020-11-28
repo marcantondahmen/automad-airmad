@@ -1,0 +1,25 @@
+.. image:: _static/airmad.svg
+
+Airmad
+======
+
+.. container:: .large
+
+   Airtable in Automad --- 
+   a fexible yet simple to use `Automad <https://automad.org>`_ extension that let's you easily integrate `Airtable <https://airtable.com>`_ bases 
+   into your site by using `Handlebars <https://handlebarsjs.com>`_ templates.
+
+.. container:: .buttons
+
+   `Get Started ⟶ <get-started.html>`_
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+   
+   get-started
+   usage
+   templates
+   pagination
+   filters
+   examples

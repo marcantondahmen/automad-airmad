@@ -11,6 +11,7 @@ var gulp = require('gulp'),
 	autoprefixer = require('gulp-autoprefixer'),
 	cleanCSS = require('gulp-clean-css'),
 	concat = require('gulp-concat'),
+	favicons = require('favicons').stream,
 	less = require('gulp-less'),
 	rename = require('gulp-rename'),
 	uglify = require('gulp-uglify-es').default,
@@ -71,6 +72,42 @@ gulp.task('watch', function () {
 
 	gulp.watch('less/*.less', gulp.series('airmad-less'));
 	gulp.watch('js/*.js', gulp.series('airmad-js'));
+
+});
+
+
+// Favicons.
+gulp.task('favicons', function () {
+
+	return gulp.src('docs/source/_static/favicon.png')
+		.pipe(favicons({
+			appName: 'Airmad',
+			appDescription: '',
+			developerName: 'Marc Anton Dahmen',
+			developerURL: 'https://marcdahmen.de',
+			background: '',
+			path: 'docs/source/_static/',
+			url: '',
+			display: 'browser',
+			orientation: 'any',
+			start_url: '',
+			version: 1.0,
+			logging: false,
+			html: false,
+			pipeHTML: false,
+			replace: true,
+			icons: {
+				android: false, // Create Android homescreen icon. `boolean` or `{ offset, background }`
+				appleIcon: false, // Create Apple touch icons. `boolean` or `{ offset, background }`
+				appleStartup: false, // Create Apple startup images. `boolean` or `{ offset, background }`
+				coast: false, // Create Opera Coast icon. `boolean` or `{ offset, background }`
+				favicons: true, // Create regular favicons. `boolean`
+				firefox: false, // Create Firefox OS icons. `boolean` or `{ offset, background }`
+				windows: false, // Create Windows 8 tile icons. `boolean` or `{ background }`
+				yandex: false
+			}
+		}))
+		.pipe(gulp.dest('docs/source/_static'));
 
 });
 

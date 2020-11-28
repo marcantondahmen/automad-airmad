@@ -1,0 +1,8 @@
+html.landing .rst-content h1 {
+	font-size: 3.4rem !important;
+	font-weight: 780 !important;
+}
+
+.wy-menu-vertical {
+	padding-top: 0 !important;
+}
