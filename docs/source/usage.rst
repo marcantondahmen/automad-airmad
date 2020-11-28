@@ -99,6 +99,11 @@ Name                Description
 ``:airmadMemory``   The max memory used by Automad in bytes
 ==================  ===============
 
+.. attention::
+
+    Note that you can define an unique prefix to be used instead of ``:airmad*`` in the 
+    Airmad `options <#options>`_ when creating a new instance.
+
 Multiple Instances
 ------------------
 
