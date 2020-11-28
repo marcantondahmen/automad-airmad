@@ -33,7 +33,7 @@ navigating to **System Settings > More > Edit Configuration File** in the Automa
 dashboard as demonstrated below. Aside from the authentictaion, there you can also 
 configure the Airtable cache lifetime in seconds.
 
-.. code-block:: javascript
+.. code-block:: php
    :linenos:
 
     {
