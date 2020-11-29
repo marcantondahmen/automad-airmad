@@ -19,7 +19,6 @@ By default the slide will have an aspect ratio of 1:1 --- in other words a heigh
 You can pass an optional second argument to the helper to define a custom height as follows:
 
 .. code-block:: php
-   :linenos:
 
     {{#slider fields.images 75%}}
 
@@ -34,7 +33,6 @@ The ``@`` field contains all referenced records in linked tables. The example be
 To simply get the IDs of the records in a linked table, you can just loop over the list of IDs as usual.
 
 .. code-block:: php
-   :linenos:
 
     {{# fields.Type }}
         {{ . }}
@@ -44,7 +42,7 @@ Instead of just getting the ID, you can directly loop over a list of the linked 
 with ``{{# fields.@.Type }}``. Note the ``@`` in the variable name.
 
 .. code-block:: php
-   :linenos:
+   :emphasize-lines: 1,3
 
     {{# fields.@.Type }}
         <i>{{ Name }}</i>
@@ -58,7 +56,6 @@ Therefore Airmad the ``active`` field to any record that appears as value for a 
 The field can be used as follows:
 
 .. code-block:: php
-   :linenos:
 
     <option value="{{ id }}" {{#if active}}selected{{/if}}>
         {{ fields.Name }}

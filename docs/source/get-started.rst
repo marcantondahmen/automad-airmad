@@ -34,7 +34,6 @@ dashboard as demonstrated below. Aside from the authentictaion, there you can al
 configure the Airtable cache lifetime in seconds.
 
 .. code-block:: php
-   :linenos:
 
     {
       "AIRMAD_TOKEN": "keyXXXXXXXXXXXXXX",

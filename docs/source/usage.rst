@@ -44,7 +44,6 @@ To display the generated output, the ``:airmadOutput`` variable can be used in a
 template for example as follows.
 
 .. code-block:: php
-   :linenos:
 
     <div class="cards grid am-stretched">
         @{ :airmadOutput }
@@ -115,3 +114,24 @@ gets the actual products for example from a table called ``Products``.
 To avoid overwriting the output the first table with the output of the second one, 
 the generated runtime variables need to have a unique prefix that can be defined in the 
 options by using the ``prefix`` parameter.
+
+.. code-block:: php
+   :emphasize-lines: 6,8,15,17
+
+    <@ Airmad/Airmad {
+        base: 'appXXXXXXXXXXXXXX',
+        table: 'Type',
+        view: 'Grid view',
+        template: '<option value="{{ fields.Name }}">',
+        prefix: ':type'
+    } @>
+    @{ :typeOutput }
+
+    <@ Airmad/Airmad {
+        base: 'appXXXXXXXXXXXXXX',
+        table: 'Products',
+        view: 'Grid view',
+        template: '<option value="{{ fields.Name }}">',
+        prefix: ':products'
+    } @>
+    @{ :productsOutput }

@@ -13,7 +13,6 @@ Example
 A very simple example for a pagination within an Automad snippet could look as follows:
 
 .. code-block:: php
-   :linenos:
 
     <ul class="uk-pagination">
 

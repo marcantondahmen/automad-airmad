@@ -8,7 +8,7 @@ demonstrated the basic idea:
 .. code-block:: php
    :emphasize-lines: 2,3,10,12
 
-    <form class="uk-forms" action="">
+    <form action="">
         <input type="text" name="Name" value="@{ ?Name }">
         <input type="text" name="Type" value="@{ ?Type }">
     </form>
@@ -18,7 +18,7 @@ demonstrated the basic idea:
         table: 'Products',
         view: 'Grid view',
         linked: 'Type',
-        template: '<li>{{ fields.Product Name }}</li>',
+        template: '<li>{{ fields.Name }}</li>',
         filters: 'Name, Type',
         limit: 20,
         page: @{ ?Page | def(1) }
@@ -65,7 +65,7 @@ populate such a list with the ``Name`` field of each record. In the following ex
         table: 'Products',
         view: 'Grid view',
         linked: 'Type',
-        template: '<li>{{ fields.Product Name }}</li>',
+        template: '<li>{{ fields.Name }}</li>',
         filters: 'Name, Type',
         limit: 20,
         page: @{ ?Page | def(1) }
