@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/marcantondahmen/automad-airmad/master/airmad.svg)
+![](https://raw.githubusercontent.com/marcantondahmen/automad-airmad/master/docs/source/_static/airmad.png)
 
 # Airmad
 
