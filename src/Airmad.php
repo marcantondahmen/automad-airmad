@@ -284,16 +284,15 @@ class Airmad {
 		$handlebars = new Handlebars();
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
 
+			preg_match('/^([\s\w\-\.\_]+?)\s+(\d{1,3}%)?$/i', $args, $argsArray);
 
-			$argsArray = preg_split('/\s+/', $args);
+			if (!empty($argsArray[1])) {
 
-			if (!empty($argsArray[0])) {
-
-				$images = $context->get($argsArray[0]);
+				$images = $context->get(trim($argsArray[1]));
 				$padding = '';
 
-				if (!empty($argsArray[1])) {
-					$padding = ' style="--airmad-slider-padding-top:' . $argsArray[1] . ';"';
+				if (!empty($argsArray[2])) {
+					$padding = ' style="--airmad-slider-padding-top:' . $argsArray[2] . ';"';
 				}
 
 				$output = '<div class="airmad-slider"' . $padding . ' data-airmad-slider>';
