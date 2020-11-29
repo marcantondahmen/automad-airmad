@@ -284,7 +284,10 @@ class Airmad {
 		$handlebars = new Handlebars();
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
 
-			preg_match('/^([\s\w\-\.\_]+?)\s+(\d{1,3}%)?$/i', $args, $argsArray);
+			preg_match('/^([\s\w\-\.\_]+?)(\s+\d{1,3}%)?$/i', $args, $argsArray);
+			$slider = '';
+
+			print_r($argsArray);
 
 			if (!empty($argsArray[1])) {
 
@@ -292,15 +295,15 @@ class Airmad {
 				$padding = '';
 
 				if (!empty($argsArray[2])) {
-					$padding = ' style="--airmad-slider-padding-top:' . $argsArray[2] . ';"';
+					$padding = ' style="--airmad-slider-padding-top:' . trim($argsArray[2]) . ';"';
 				}
 
-				$output = '<div class="airmad-slider"' . $padding . ' data-airmad-slider>';
+				$slider = '<div class="airmad-slider"' . $padding . ' data-airmad-slider>';
 
 				if (!empty($images) && is_array($images)) {
 					
 					foreach ($images as $image) {
-						$output .= <<< HTML
+						$slider .= <<< HTML
 									<div class="airmad-slider-item">
 										<img src="{$image->thumbnails->large->url}">
 									</div>	
@@ -309,11 +312,11 @@ class Airmad {
 
 				}
 
-				$output .= '</div>';
+				$slider .= '</div>';
 
 			}			
 
-			return $output;
+			return $slider;
 
 		});
 
