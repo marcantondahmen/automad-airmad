@@ -38,8 +38,9 @@ To simply get the IDs of the records in a linked table, you can just loop over t
         {{ . }}
     {{/ fields.Type }}
 
-Instead of just getting the ID, you can directly loop over a list of the linked records by replacing ``{{# fields.Type }}`` 
-with ``{{# fields.@.Type }}``. Note the ``@`` in the variable name.
+Instead of just getting the ID, you can directly loop over a list of the linked records by inserting a ``@`` into ``{{# fields.Type }}`` 
+like ``{{# fields.@.Type }}``. It is important to understand that the name after the ``@`` 
+is here again the name of the **field** and might differ from the actual table name.
 
 .. code-block:: php
    :emphasize-lines: 1,3
@@ -56,6 +57,7 @@ Therefore Airmad the ``active`` field to any record that appears as value for a 
 The field can be used as follows:
 
 .. code-block:: php
+    :emphasize-lines: 1
 
     <option value="{{ id }}" {{#if active}}selected{{/if}}>
         {{ fields.Name }}

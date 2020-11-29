@@ -23,4 +23,5 @@ Airmad
    templates
    pagination
    filters
-   examples
+   example
+   Support <https://discuss.automad.org>

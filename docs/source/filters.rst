@@ -50,7 +50,7 @@ populate such a list with the ``Name`` field of each record. In the following ex
         <input type="text" list="types" name="Type" value="@{ ?Type }">
         <@ Airmad/Airmad {
             base: 'appXXXXXXXXXXXXXX',
-            table: 'Type',
+            table: 'Types',
             view: 'Grid view',
             template: '<option value="{{ fields.Name }}">',
             prefix: ':type'
@@ -64,7 +64,7 @@ populate such a list with the ``Name`` field of each record. In the following ex
         base: 'appXXXXXXXXXXXXXX',
         table: 'Products',
         view: 'Grid view',
-        linked: 'Type',
+        linked: 'Type => Types',
         template: '<li>{{ fields.Name }}</li>',
         filters: 'Name, Type',
         limit: 20,

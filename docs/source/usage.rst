@@ -66,9 +66,12 @@ Name            Description
 ``base``        The Airtable base ID
 ``table``       The main table to be used to pull records from
 ``view``        The view of the main `table` to be used
-``linked``      A comma separated list of table that are linked in the records 
-                of the main table --- note that is only required to list linked tables 
-                here that include information that you want to display
+``linked``      A comma separated list of tables that are linked to a field  
+                of the main table records --- note that is only required to list linked tables 
+                here that include information that you want to display. In case the field name 
+                differs from the actual table name to be linked, it is also possible to pass 
+                a list of strings like ``fieldName1 => tableName1, fieldName2 => tableName2`` 
+                to the parameter to link such fields to any table.
 ``template``    The Handlebar template to be used to render a record --- 
                 can be either a string, a variable containing a string or a file path
 ``filters``     A comma separated list of fields that can be used to filter the records by --- 
