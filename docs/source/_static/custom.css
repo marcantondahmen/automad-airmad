@@ -3,36 +3,21 @@ html.landing .rst-content h1 {
 	font-weight: 780 !important;
 }
 
-html.landing .headerlink {
-	display: none !important;
-}
-
 .wy-menu-vertical {
 	padding-top: 0 !important;
 }
 
-.linenos pre {
-	padding-right: 0.3em !important;
-}
-
-.linenos + .code .highlight pre {
-	padding-left: 0 !important;
-}
-
-pre,
-code {
-	font-weight: 400;
-	font-size: 0.94rem !important;
-	line-height: 1.6 !important;
-}
-
 .landing .buttons.container .reference {
 	font-size: 1.5rem;
-	font-weight: 500;
+	font-weight: 580;
 }
 
 .landing .buttons.container .reference:first-child:not(:hover) {
 	color: #181818;
 	background-color: #fffc52;
 	border-color: #fffc52;
+}
+
+.admonition > .admonition-title {
+	display: none;
 }
