@@ -10,8 +10,7 @@ theme that supports Automad's block editor. The markup looks as follows:
     You can simply paste an Airmad snippet directly into a code field of the new 
     **Template Snippet** block on any page in the Automad dashboard. 
 
-.. code-block:: 
-   :linenos:
+.. code-block:: php
 
     <@ Airmad/Airmad {
         base: 'appXXXXXXXXXXXXXX',
