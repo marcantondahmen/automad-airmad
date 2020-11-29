@@ -1,6 +1,6 @@
 {
 	"name": "airmad/airmad",
-	"description": "An Airtable integration for Automad.",
+	"description": "A flexible yet simple to use Automad extension that let's you easily integrate Airtable bases into your site by using Handlebars templates",
 	"type": "automad-package",
 	"keywords": ["extension", "airtable"],
 	"license": "MIT",
