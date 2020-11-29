@@ -76,10 +76,10 @@ class Airmad {
 
 		$this->options = (object) array_merge($defaults, $options);
 		$this->options->filters = Core\Parse::csv($this->options->filters);
-		$this->options->linked = Core\Parse::csv($this->options->linked);
 		$this->options->limit = intval($this->options->limit);
 		$this->options->page = intval($this->options->page);
 
+		$this->tableMap = $this->buildTableMap(Core\Parse::csv($this->options->linked));
 		$this->tables = $this->getTables();
 
 		if (is_readable(AM_BASE_DIR . $this->options->template)) {
@@ -137,6 +137,41 @@ class Airmad {
 
 
 	/**
+	 *	Builds a map of fields linked to tables by passing an array of strings like "field => table".
+	 *
+	 *	@param array $links
+	 *	@return array The map array
+	 */
+
+	private function buildTableMap($links) {
+
+		$tableMap = array();
+
+		foreach ($links as $link) {
+
+			$parts = preg_split('/\s*\=\>\s*/', $link);
+
+			if (!empty($parts)) {
+
+				$field = $parts[0];
+				$table = $field;
+
+				if (!empty($parts[1])) {
+					$table = $parts[1];
+				}
+
+				$tableMap[$field] = $table;
+
+			}	
+
+		}
+
+		return $tableMap;
+
+	}
+
+
+	/**
 	 *	Links records of linked tables.
 	 */
 
@@ -146,11 +181,12 @@ class Airmad {
 
 			$linked = array();
 
-			foreach ($record->fields as $tableName => $ids) {
+			foreach ($record->fields as $fieldName => $ids) {
 
-				if (in_array($tableName, $this->options->linked)) {
+				if (in_array($fieldName, array_keys($this->tableMap))) {
 
 					$fields = array();
+					$tableName = $this->tableMap[$fieldName];
 
 					foreach ($ids as $id) {
 						
@@ -162,7 +198,7 @@ class Airmad {
 
 					}
 
-					$linked[$tableName] = $fields;
+					$linked[$fieldName] = $fields;
 					$fields = NULL;
 
 				}
@@ -302,8 +338,8 @@ class Airmad {
 		$tables = array();
 		$tables[$this->options->table] = $this->getRecords($this->options->table, $this->options->view);
 		
-		foreach ($this->options->linked as $key) {
-			$tables[$key] = $this->getRecords($key);
+		foreach (array_values($this->tableMap) as $tableName) {
+			$tables[$tableName] = $this->getRecords($tableName);
 		}
 
 		return $tables;
@@ -326,6 +362,7 @@ class Airmad {
 			return $records;
 		}
 
+		$table = rawurlencode($table);
 		$records = array();		
 		$url = "$this->apiUrl/{$this->options->base}/$table";
 
