@@ -21,3 +21,7 @@ html.landing .rst-content h1 {
 .admonition > .admonition-title {
 	display: none;
 }
+
+.highlight .hll {
+	background-color: #fffc52 !important;
+}
