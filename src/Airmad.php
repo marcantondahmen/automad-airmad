@@ -287,8 +287,6 @@ class Airmad {
 			preg_match('/^([\s\w\-\.\_]+?)(\s+\d{1,3}%)?$/i', $args, $argsArray);
 			$slider = '';
 
-			print_r($argsArray);
-
 			if (!empty($argsArray[1])) {
 
 				$images = $context->get(trim($argsArray[1]));
