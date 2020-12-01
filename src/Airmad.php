@@ -41,6 +41,13 @@ class Airmad {
 
 
 	/**
+	 *	The name of the ID field.
+	 */
+
+	private $idFieldName = '_ID';
+
+
+	/**
 	 *	The main function.
 	 *
 	 *	@param array $options
@@ -154,13 +161,11 @@ class Airmad {
 	
 		array_walk($this->tables[$this->options->table], function(&$record) {
 
-			$linked = array();
-
 			foreach ($record->fields as $fieldName => $ids) {
 
 				if (in_array($fieldName, array_keys($this->tableMap))) {
 
-					$fields = array();
+					$linkedRecords = array();
 					$tableName = $this->tableMap[$fieldName];
 
 					foreach ($ids as $id) {
@@ -168,23 +173,22 @@ class Airmad {
 						$key = array_search($id, array_column($this->tables[$tableName], 'id'));
 
 						if ($key !== false) {
-							$fields[] = $this->tables[$tableName][$key]->fields;
+							$linkedRecordFields = $this->tables[$tableName][$key]->fields;
+							$linkedRecordFields->{$this->idFieldName} = $id;
+							$linkedRecords[] = $linkedRecordFields;
 						}
 
 					}
-
-					$linked[$fieldName] = $fields;
-					$fields = NULL;
+					
+					$record->fields->{$fieldName} = $linkedRecords;
+					$linkedRecords = NULL;
 
 				}
 
 			}
 			
-			$record->fields->{'@'} = (object) $linked;
-			$linked = NULL;
-
 			// Make id accessible within fields.
-			$record->fields->{'@id'} = $record->id;
+			$record->fields->{$this->idFieldName} = $record->id;
 
 		});
 
@@ -219,20 +223,31 @@ class Airmad {
 
 			foreach ($filters as $filter => $value) {
 
-				$fieldStr = '';
+				$data = '';
 
-				// Search in record ID array.
 				if (!empty($record->fields->$filter)) {
-					$fieldStr = json_encode($record->fields->$filter);
+
+					$data = $record->fields->$filter;
+
+					if (is_array($data)) {
+
+						$data = json_encode($data);
+
+						// Remove linked IDs from JSON string to not confuse filters.
+						$data = preg_replace('/\[("rec\w{14,20}",?)+\]/', '', $data);
+
+						// Remove keys from JSON.
+						$data = preg_replace('/"[^"]+"\:/', '', $data);
+
+						// Remove special chars.
+						$data = preg_replace('/[,"\{\}\[\]]+/', ' ', $data);
+
+					}
+					
 				}
 
-				// Also search in linked table values.
-				if (!empty($record->fields->{'@'}->$filter)) {
-					$fieldStr .= json_encode($record->fields->{'@'}->$filter);
-				}
-
-				if ($fieldStr) {
-					$match = preg_match("/{$value}/is", $fieldStr);
+				if ($data) {
+					$match = preg_match("/{$value}/is", $data);
 				} else {
 					$match = false;
 				}
@@ -259,7 +274,7 @@ class Airmad {
 	private function render() {
 
 		$output = '';
-		$handlebars = new Handlebars();
+		$handlebars = new Handlebars(array('enableDataVariables' => true));
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
 
 			preg_match('/^([\s\w\-\.\_]+?)(\s+\d{1,3}%)?$/i', $args, $argsArray);
