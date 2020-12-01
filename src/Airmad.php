@@ -296,6 +296,38 @@ class Airmad {
 
 		});
 
+		$handlebars->addHelper('if==', function($template, $context, $args, $source) {
+
+			$argsArray = Core\Parse::csv($args);
+
+			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
+				if ($context->get($argsArray[0]) == $argsArray[1]) {
+					$buffer = $template->render($context);
+					$template->discard();
+					return $buffer;
+				}
+			}
+
+			return false;
+
+		});	
+
+		$handlebars->addHelper('if!=', function($template, $context, $args, $source) {
+
+			$argsArray = Core\Parse::csv($args);
+
+			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
+				if ($context->get($argsArray[0]) != $argsArray[1]) {
+					$buffer = $template->render($context);
+					$template->discard();
+					return $buffer;
+				}
+			}
+
+			return false;
+
+		});	
+
 		foreach ($this->tables[$this->options->table] as $record) {
 			$output .= $handlebars->render($this->options->template, $record->fields);
 		}
