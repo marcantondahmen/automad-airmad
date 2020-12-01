@@ -86,7 +86,7 @@ class Airmad {
 			$this->options->template = file_get_contents(AM_BASE_DIR . $this->options->template);
 		}
 		
-		$this->link();
+		$this->prepareModel();
 		$this->filter();
 
 		$count = count($this->tables[$this->options->table]);
@@ -172,10 +172,10 @@ class Airmad {
 
 
 	/**
-	 *	Links records of linked tables.
+	 *	Links records of linked tables and creates record id field.
 	 */
 
-	private function link() {
+	private function prepareModel() {
 	
 		array_walk($this->tables[$this->options->table], function(&$record) {
 
@@ -207,6 +207,9 @@ class Airmad {
 			
 			$record->fields->{'@'} = (object) $linked;
 			$linked = NULL;
+
+			// Make id accessible within fields.
+			$record->fields->{'@id'} = $record->id;
 
 		});
 
@@ -319,7 +322,7 @@ class Airmad {
 		});
 
 		foreach ($this->tables[$this->options->table] as $record) {
-			$output .= $handlebars->render($this->options->template, $record);
+			$output .= $handlebars->render($this->options->template, $record->fields);
 		}
 		
 		return $output;
