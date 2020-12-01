@@ -59,6 +59,7 @@ Let's assume you have a ``Type`` table and you want to access the ``Name`` of ea
 The data returned by the Airtable API looks for example as follows:
 
 .. code-block:: 
+   :emphasize-lines: 4,5,6
 
     {
       "fields": { 
@@ -73,6 +74,7 @@ The data returned by the Airtable API looks for example as follows:
 Airmad will look up all contained fields automatically and expose the following data to the render engine:
 
 .. code-block:: 
+   :emphasize-lines: 7,12,17
 
     {
       "fields": {
@@ -85,12 +87,12 @@ Airmad will look up all contained fields automatically and expose the following 
           {
             "Name": "Table",
             "Product": ["recUtSDeLJ4HQI0uD"],
-            "_ID": "recmD5WiE2GeV3ZIW"
+            "_ID": "recuBUENcDgqnzSww"
           },
           {
             "Name": "Carpet",
             "Product": ["recJcjDC9IN8Vws16"],
-            "_ID": "recmD5WiE2GeV3ZIW"
+            "_ID": "recj0zpg9qo8M7SeM"
           }
         ]
       }
