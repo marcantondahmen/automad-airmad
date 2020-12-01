@@ -18,7 +18,7 @@ demonstrated the basic idea:
         table: 'Products',
         view: 'Grid view',
         linked: 'Type',
-        template: '<li>{{ fields.Name }}</li>',
+        template: '<li>{{ Name }}</li>',
         filters: 'Name, Type',
         limit: 20,
         page: @{ ?Page | def(1) }
@@ -52,7 +52,7 @@ populate such a list with the ``Name`` field of each record. In the following ex
             base: 'appXXXXXXXXXXXXXX',
             table: 'Types',
             view: 'Grid view',
-            template: '<option value="{{ fields.Name }}">',
+            template: '<option value="{{ Name }}">',
             prefix: ':type'
         } @>
         <datalist id="types">
@@ -65,7 +65,7 @@ populate such a list with the ``Name`` field of each record. In the following ex
         table: 'Products',
         view: 'Grid view',
         linked: 'Type => Types',
-        template: '<li>{{ fields.Name }}</li>',
+        template: '<li>{{ Name }}</li>',
         filters: 'Name, Type',
         limit: 20,
         page: @{ ?Page | def(1) }

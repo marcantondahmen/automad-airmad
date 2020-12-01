@@ -2,63 +2,128 @@ Templates
 =========
 
 As mentioned earlier, Airmad uses `Handlebars <https://github.com/salesforce/handlebars-php#expressions>`_ 
-templates to render record data. While iterating table records, all record data is exposed to the engine 
-and can be accessed by using the normal variable tags. 
-The main items here are the ``id``, the ``fields`` and the ``createdTime``. 
-The ``fields`` item actually contains all table fields entered by you. For example to get the ``Name`` of a record, 
-you can simply use ``{{ fields.Name }}`` in a template. 
+to render record data. While iterating table records, all record fields are exposed to the engine 
+and can be accessed by using the normal variable tags. For example to get the ``Name`` of a record, 
+you can simply use ``{{ Name }}`` in a template. 
 Aside from the default tags, Airmad provides some other useful helpers to let you easily use fields in 
 linked tables or build slideshow.
 
 Image Sliders
 -------------
 
-In case your table has an attachement field, you can use the ``{{#slider fields.images}}`` helper function to 
-create an image slider containing all provided images as that are listed in a field called ``fields.images``. 
+In case your table has an attachement field, you can use the ``{{#slider images}}`` helper function to 
+create an image slider containing all provided images as that are listed in a field called ``images``. 
 By default the slide will have an aspect ratio of 1:1 --- in other words a height of 100% relative to the width. 
 You can pass an optional second argument to the helper to define a custom height as follows:
 
 .. code-block:: php
 
-    {{#slider fields.images 75%}}
+    {{#slider images 75%}}
+
+If Equals
+---------
+
+In case you quickly want to compare a field value with any string or number you can use the ``if==`` helper: 
+
+.. code-block:: php
+
+    {{#if== field, value}} ... {{/if==}}
+
+If Not Equals
+-------------
+
+The counterpart to ``if==`` helper is the ``if!=`` helper that lets you check for inequality:
+
+.. code-block:: php
+
+    {{#if!= field, value}} ... {{/if!=}}
+
+Record ID
+---------
+
+Since the actual record ID is by default not a field, Airmad provides the dedicated ``_ID`` field 
+that contains the actual record ID. 
+
+.. code-block:: php
+
+    {{ _ID }}
 
 Linked Tables
 -------------
 
 In case you have fields that actually link to other tables in your base, the content of such a field is just a 
 bunch of record IDs. In most cases you would want to be able to actually get the values of the one or more 
-fields of that record. Therefore Airmad adds a dedicated fields to your data model at runtime called ``fields.@``. 
-The ``@`` field contains all referenced records in linked tables. The example below demonstrates the usage of such fields.    
+fields of that record. Fortunately Airmad automatically looks up the linked fields for you and replaces the ID string 
+with an array of the actual fields. The replaced ID is then moved to the ``_ID`` field of the record's array. 
+Let's assume you have a ``Type`` table and you want to access the ``Name`` of each type linked to your product.
+The data returned by the Airtable API looks for example as follows:
 
-To simply get the IDs of the records in a linked table, you can just loop over the list of IDs as usual.
+.. code-block:: 
+
+    {
+      "fields": { 
+        "Type": [
+          "recmD5WiE2GeV3ZIW",
+          "recuBUENcDgqnzSww",
+          "recj0zpg9qo8M7SeM"
+        ]
+      }
+    }
+
+Airmad will look up all contained fields automatically and expose the following data to the render engine:
+
+.. code-block:: 
+
+    {
+      "fields": {
+        "Type": [
+          {
+            "Name": "Chair",
+            "Product": ["recUtSDeLJ4HQI0uD", "recJcjDC9IN8Vws16"],
+            "_ID": "recmD5WiE2GeV3ZIW"
+          },
+          {
+            "Name": "Table",
+            "Product": ["recUtSDeLJ4HQI0uD"],
+            "_ID": "recmD5WiE2GeV3ZIW"
+          },
+          {
+            "Name": "Carpet",
+            "Product": ["recJcjDC9IN8Vws16"],
+            "_ID": "recmD5WiE2GeV3ZIW"
+          }
+        ]
+      }
+    }
+
+In a template you can therefore simple loop over the types and get the ``Name`` as follows:
 
 .. code-block:: php
 
-    {{# fields.Type }}
-        {{ . }}
-    {{/ fields.Type }}
+    {{# Type }}
+        {{ Name }}
+    {{/ Type }}
 
-Instead of just getting the ID, you can directly loop over a list of the linked records by inserting a ``@`` into ``{{# fields.Type }}`` 
-like ``{{# fields.@.Type }}``. It is important to understand that the name after the ``@`` 
-is here again the name of the **field** and might differ from the actual table name.
+Each Loops
+----------
 
-.. code-block:: php
-   :emphasize-lines: 1,3
-
-    {{# fields.@.Type }}
-        <i>{{ Name }}</i>
-    {{/ fields.@.Type }}
-
-Active Filters
---------------
-
-When building dropdown menus or similar to filter the set of elements, it is imortant to know what filter is currently active. 
-Therefore Airmad the ``active`` field to any record that appears as value for a table filter in the query string. 
-The field can be used as follows:
+Handlebars provides a great feature to enhance the use of lists. While it is possible to simply
+loop over items like:
 
 .. code-block:: php
-    :emphasize-lines: 1
 
-    <option value="{{ id }}" {{#if active}}selected{{/if}}>
-        {{ fields.Name }}
-    </option>
+    {{# Type }}
+        {{ Name }}
+    {{/ Type }}
+
+You can alternatively use the ``{{#each Type}} ... {{/each}}`` helper to get more access to 
+built-in data variables like ``@first``, ``@last`` and ``@index``. This is for example very 
+useful in case you need to concatenate a list of items with a comma: 
+
+.. code-block:: php
+
+    {{#each Type }}
+        <i>{{Name}}</i>{{#unless @last}},{{/unless}}
+    {{/each}}
+
+You can find more about the use of data variables in `here <https://github.com/salesforce/handlebars-php#data-variables-for-each>`_.

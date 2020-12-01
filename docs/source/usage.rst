@@ -21,12 +21,12 @@ theme that supports Automad's block editor. The markup looks as follows:
             <div class="card">
                 <div class="card-content uk-panel uk-panel-box">
                     <div class="uk-panel-title">
-                        {{ fields.Name }}
+                        {{ Name }}
                     </div>
                     <p>
-                        {{# fields.@.Type }}
+                        {{# Type }}
                             <i>{{ Name }}</i>
-                        {{/ fields.@.Type }}
+                        {{/ Type }}
                     </p>
                 </div>
             </div>
@@ -124,7 +124,7 @@ options by using the ``prefix`` parameter.
         base: 'appXXXXXXXXXXXXXX',
         table: 'Type',
         view: 'Grid view',
-        template: '<option value="{{ fields.Name }}">',
+        template: '<option value="{{ Name }}">',
         prefix: ':type'
     } @>
     @{ :typeOutput }
@@ -133,7 +133,7 @@ options by using the ``prefix`` parameter.
         base: 'appXXXXXXXXXXXXXX',
         table: 'Products',
         view: 'Grid view',
-        template: '<option value="{{ fields.Name }}">',
+        template: '<option value="{{ Name }}">',
         prefix: ':products'
     } @>
     @{ :productsOutput }

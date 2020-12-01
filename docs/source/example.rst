@@ -33,7 +33,7 @@ In our example we want to filter the records by the **Client** field that is lin
             base: 'appXXXXXXXXXXXXXX',
             table: 'Clients',
             view: 'All clients',
-            template: '<option value="{{ fields.Name }}">',
+            template: '<option value="{{ Name }}">',
             prefix: ':clients'
         } @>
         <datalist id="clients">
@@ -61,15 +61,15 @@ with the **Standard** theme.
             <div class="card">
                 <div class="card-content uk-panel uk-panel-box">
                     <div class="uk-panel-teaser">
-                        {{#slider fields.Project images 75%}}
+                        {{#slider Project images 75%}}
                     </div>
                     <div class="uk-panel-title">
-                        {{ fields.Name }}
+                        {{ Name }}
                     </div>
                     <p>
-                        {{# fields.@.Client }}
+                        {{# Client }}
                             <b>{{ Name }}</b>
-                        {{/ fields.@.Client }}
+                        {{/ Client }}
                     </p>
                 </div>
             </div>
