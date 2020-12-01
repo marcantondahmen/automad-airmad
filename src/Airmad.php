@@ -92,7 +92,6 @@ class Airmad {
 		$count = count($this->tables[$this->options->table]);
 
 		$this->slice();
-		$this->findActiveRecords();
 
 		$output = $this->render();
 
@@ -108,30 +107,6 @@ class Airmad {
 
 		AirmadRuntime::register($hash);
 		$this->tables = NULL;
-
-	}
-
-
-	/**
-	 *	Finds records that appear in the query string as table filters and adds an "active" field.
-	 */
-
-	private function findActiveRecords() {
-
-		foreach (array_keys($_GET) as $filter) {
-			
-			if (array_key_exists($filter, $this->tables)) {
-				
-				$id = Core\Request::query($filter);
-				$key = array_search($id, array_column($this->tables[$filter], 'id'));
-
-				if ($key !== false) {
-					$this->tables[$filter][$key]->active = true;
-				}
-			
-			}
-
-		}
 
 	}
 
