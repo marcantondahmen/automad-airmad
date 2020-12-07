@@ -275,40 +275,13 @@ class Airmad {
 
 		$output = '';
 		$handlebars = new Handlebars(array('enableDataVariables' => true));
+
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
+			return AirmadSlider::render($template, $context, $args, 'large');
+		});
 
-			preg_match('/^([\s\w\-\.\_]+?)(\s+\d{1,3}%)?$/i', $args, $argsArray);
-			$slider = '';
-
-			if (!empty($argsArray[1])) {
-
-				$images = $context->get(trim($argsArray[1]));
-				$padding = '';
-
-				if (!empty($argsArray[2])) {
-					$padding = ' style="--airmad-slider-padding-top:' . trim($argsArray[2]) . ';"';
-				}
-
-				$slider = '<div class="airmad-slider"' . $padding . ' data-airmad-slider>';
-
-				if (!empty($images) && is_array($images)) {
-					
-					foreach ($images as $image) {
-						$slider .= <<< HTML
-									<div class="airmad-slider-item">
-										<img src="{$image->thumbnails->large->url}">
-									</div>	
-	HTML;
-					}
-
-				}
-
-				$slider .= '</div>';
-
-			}			
-
-			return $slider;
-
+		$handlebars->addHelper('sliderLarge', function($template, $context, $args, $source) {
+			return AirmadSlider::render($template, $context, $args, 'full');
 		});
 
 		$handlebars->addHelper('if==', function($template, $context, $args, $source) {

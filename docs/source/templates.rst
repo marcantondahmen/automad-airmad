@@ -11,14 +11,22 @@ linked tables or build slideshow.
 Image Sliders
 -------------
 
-In case your table has an attachement field, you can use the ``{{#slider images}}`` helper function to 
-create an image slider containing all provided images as that are listed in a field called ``images``. 
-By default the slide will have an aspect ratio of 1:1 --- in other words a height of 100% relative to the width. 
+In case your table has an attachement field, you can use the ``{{#slider images}}`` or 
+``{{#sliderLarge images}}`` helper functions to create an image slider containing all 
+provided images as that are listed in a field called ``images``. By default the slide will 
+have an aspect ratio of 1:1 --- in other words a height of 100% relative to the width. 
 You can pass an optional second argument to the helper to define a custom height as follows:
 
 .. code-block:: php
 
     {{#slider images 75%}}
+
+The normal slider uses resized thumbnails as source files. 
+It is also possible to get the original image in a slider as follows:
+
+.. code-block:: php
+
+    {{#sliderLarge images 75%}}
 
 If Equals
 ---------
