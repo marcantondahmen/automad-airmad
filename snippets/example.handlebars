@@ -1,0 +1,21 @@
+<div class="am-stretched grid cards">
+	{{#records}}
+		{{#fields}}
+			<div class="card">
+				<div class="card-content uk-panel uk-panel-box">
+					<div class="uk-panel-teaser">
+						{{#slider Project images}}
+					</div>
+					<div class="uk-panel-title">
+						{{Name}}
+					</div>
+					<p>
+						{{#Client}}
+							{{Name}}
+						{{/Client}}
+					</p>
+				</div>
+			</div>
+		{{/fields}}
+	{{/records}}
+</div>
