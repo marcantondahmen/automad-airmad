@@ -93,13 +93,10 @@ class Airmad {
 		}
 
 		$AirmadModel = new AirmadModel($this->options); 
-		$this->records = $AirmadModel->getRecords();
-		$this->filterData = $AirmadModel->getFilterData();
+		$this->model = $AirmadModel->get();
 		$AirmadModel = NULL;
 
-		$this->filter();
-
-		$count = count($this->records);
+		$count = count($this->model->records);
 
 		$this->slice();
 
@@ -117,76 +114,6 @@ class Airmad {
 
 		AirmadRuntime::register($hash);
 		
-
-	}
-
-
-	/**
-	 *	Filters the main table for the items defined in $options->filters.
-	 */
-
-	private function filter() {
-
-		$table = $this->options->table;
-
-		$filters = array();
-
-		foreach ($this->options->filters as $filter) {
-
-			$value = Core\Request::query(str_replace(' ', '_', $filter));
-
-			if ($value) {
-				$filters[$filter] = $value;
-			}
-			
-		}
-
-		if (empty($filters)) {
-			return false;
-		}
-
-		$this->records = array_filter($this->records, function($record) use ($filters) {
-
-			foreach ($filters as $filter => $value) {
-
-				$data = '';
-
-				if (!empty($record->fields->$filter)) {
-
-					$data = $record->fields->$filter;
-
-					if (is_array($data)) {
-
-						$data = json_encode($data);
-
-						// Remove linked IDs from JSON string to not confuse filters.
-						$data = preg_replace('/\[("rec\w{14,20}",?)+\]/', '', $data);
-
-						// Remove keys from JSON.
-						$data = preg_replace('/"[^"]+"\:/', '', $data);
-
-						// Remove special chars.
-						$data = preg_replace('/[,"\{\}\[\]]+/', ' ', $data);
-
-					}
-					
-				}
-
-				if ($data) {
-					$match = preg_match("/$value/is", $data);
-				} else {
-					$match = false;
-				}
-				
-				if (!$match) {
-					return false;
-				}
-
-			}
-
-			return true;
-
-		});
 
 	}
 
@@ -241,12 +168,12 @@ class Airmad {
 
 		});	
 
+
+		print_r($this->filterData);
+
 		return $handlebars->render(
 			$this->options->template, 
-			array(
-				'records' => $this->records,
-				'filterData' => $this->filterData
-			)
+			$this->model
 		);
 
 	}
@@ -260,8 +187,8 @@ class Airmad {
 
 		$offset = ($this->options->page - 1) * $this->options->limit;
 		
-		$this->records = array_slice(
-			$this->records,
+		$this->model->records = array_slice(
+			$this->model->records,
 			$offset,
 			$this->options->limit
 		);

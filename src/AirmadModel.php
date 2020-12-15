@@ -34,10 +34,17 @@ class AirmadModel {
 
 
 	/**
-	 *	An array containing all tables.
+	 *	The actual records array.
 	 */
 
-	private $tables = array();
+	private $records = array();
+
+
+	/**
+	 *	The filter data array.
+	 */
+
+	private $filterData = array();
 
 
 	/**
@@ -57,8 +64,14 @@ class AirmadModel {
 
 		$this->options = $options;
 		$this->tableMap = $this->buildTableMap(Core\Parse::csv($options->linked));
-		$this->tables = $this->getTables();
-		$this->prepare();
+
+		$this->records = $this->filterRecords(
+			$this->prepareRecords(
+				$this->getTables()
+			)
+		);
+		
+		$this->filterData = $this->extractFilterData($this->records);
 
 	}
 
@@ -99,6 +112,77 @@ class AirmadModel {
 
 
 	/**
+	 *	Filters records for the items defined in $options->filters.
+	 *
+	 *	@param array $records
+	 *	@return array The filtered records array
+	 */
+
+	private function filterRecords($records) {
+
+		$filters = array();
+
+		foreach ($this->options->filters as $filter) {
+
+			$value = Core\Request::query(str_replace(' ', '_', $filter));
+
+			if ($value) {
+				$filters[$filter] = $value;
+			}
+			
+		}
+
+		if (empty($filters)) {
+			return $records;
+		}
+
+		return array_filter($records, function($record) use ($filters) {
+
+			foreach ($filters as $filter => $value) {
+
+				$data = '';
+
+				if (!empty($record->fields->$filter)) {
+
+					$data = $record->fields->$filter;
+
+					if (is_array($data)) {
+
+						$data = json_encode($data);
+
+						// Remove linked IDs from JSON string to not confuse filters.
+						$data = preg_replace('/\[("rec\w{14,20}",?)+\]/', '', $data);
+
+						// Remove keys from JSON.
+						$data = preg_replace('/"[^"]+"\:/', '', $data);
+
+						// Remove special chars.
+						$data = preg_replace('/[,"\{\}\[\]]+/', ' ', $data);
+
+					}
+					
+				}
+
+				if ($data) {
+					$match = preg_match("/$value/is", $data);
+				} else {
+					$match = false;
+				}
+				
+				if (!$match) {
+					return false;
+				}
+
+			}
+
+			return true;
+
+		});
+
+	}
+
+
+	/**
 	 *	Get all required tables including the linked ones. 
 	 *
 	 *	@return array The tables array.
@@ -120,12 +204,15 @@ class AirmadModel {
 	
 	
 	/**
-	 *	Links records of linked tables and creates record id field.
+	 *	Links records of linked tables and creates record id field and returns the main table.
+	 *
+	 *	@param array $tables
+	 *	@return array The main table records including the liked data.
 	 */
 
-	private function prepare() {
+	private function prepareRecords($tables) {
 	
-		array_walk($this->tables[$this->options->table], function(&$record) {
+		array_walk($tables[$this->options->table], function(&$record) use ($tables) {
 
 			foreach ($record->fields as $fieldName => $ids) {
 
@@ -136,10 +223,10 @@ class AirmadModel {
 
 					foreach ($ids as $id) {
 						
-						$key = array_search($id, array_column($this->tables[$tableName], 'id'));
+						$key = array_search($id, array_column($tables[$tableName], 'id'));
 
 						if ($key !== false) {
-							$linkedRecordFields = $this->tables[$tableName][$key]->fields;
+							$linkedRecordFields = $tables[$tableName][$key]->fields;
 							$linkedRecordFields->{$this->idFieldName} = $id;
 							$linkedRecords[] = $linkedRecordFields;
 						}
@@ -158,27 +245,48 @@ class AirmadModel {
 
 		});
 
+		return $tables[$this->options->table];
+
 	}
 
 
 	/**
-	 *	Returns all records.
+	 *	Returns the model object.
 	 *
-	 *	@return array The actual records array.
+	 *	@return array The model object.
 	 */
 
-	public function getRecords() {
-		return $this->tables[$this->options->table];
+	public function get() {
+
+		return (object) array(
+			'records' => $this->records,
+			'filterData' => $this->filterData
+		);
+
 	}
 
 
 	/**
 	 *	Returns a unique list of filter records to be use as values for autocomplete lists.
 	 *
+	 *	@param array $records
 	 *	@return array The filter data.
 	 */
 
-	public function getFilterData() {}
+	private function extractFilterData($records) {
+
+		$data = array();
+		
+		foreach ($this->options->filters as $filter) {
+
+			$filterRecords = array();
+			$data[$filter] = $filterRecords;
+
+		} 
+
+		return $data;
+
+	}
 	
 
 }
