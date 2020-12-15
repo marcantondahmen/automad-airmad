@@ -96,6 +96,8 @@ class Airmad {
 		$this->model = $AirmadModel->get();
 		$AirmadModel = NULL;
 
+		Core\Debug::log($this->model, 'Model');
+
 		$count = count($this->model->records);
 
 		$this->slice();
@@ -167,9 +169,6 @@ class Airmad {
 			return false;
 
 		});	
-
-
-		print_r($this->filterData);
 
 		return $handlebars->render(
 			$this->options->template, 
