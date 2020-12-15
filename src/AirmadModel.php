@@ -70,7 +70,7 @@ class AirmadModel {
 				$this->getTables()
 			)
 		);
-		
+
 		$this->filterData = $this->extractFilterData($this->records);
 
 	}
@@ -280,6 +280,23 @@ class AirmadModel {
 		foreach ($this->options->filters as $filter) {
 
 			$filterRecords = array();
+
+			foreach ($records as $record) {
+
+				if (is_array($record->fields->$filter)) {
+
+					foreach ($record->fields->$filter as $item) {
+						$filterRecords[md5(serialize($item))] = $item;
+					}
+
+				} else {
+
+					$filterRecords[$record->fields->$filter] = $record->fields->$filter;
+
+				}
+
+			}
+
 			$data[$filter] = $filterRecords;
 
 		} 
