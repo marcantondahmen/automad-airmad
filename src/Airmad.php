@@ -27,10 +27,17 @@ class Airmad {
 
 
 	/**
-	 *	The authentication token.
+	 *	The filter data array to be used to create autocomplete data lists for input fields or select fields.
 	 */
 
-	private $token = false;
+	private $filterData = array();
+
+
+	/**
+	 *	The actual records array.
+	 */
+
+	private $records = array();
 
 
 	/**
@@ -38,13 +45,6 @@ class Airmad {
 	 */
 
 	private $options = array();
-
-
-	/**
-	 *	The name of the ID field.
-	 */
-
-	private $idFieldName = '_ID';
 
 
 	/**
@@ -63,12 +63,6 @@ class Airmad {
 			return false;
 		}
 
-		if (!defined('AIRMAD_TOKEN')) {
-			return 'AIRMAD_TOKEN not defined!';
-		}
-
-		$this->token = AIRMAD_TOKEN;
-
 		$defaults = array(
 			'base' => false,
 			'table' => false,
@@ -78,7 +72,7 @@ class Airmad {
 			'filters' => false,
 			'limit' => 20,
 			'page' => 1,
-			'prefix' => ':airmad'
+			'prefix' => false
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
@@ -86,17 +80,26 @@ class Airmad {
 		$this->options->limit = intval($this->options->limit);
 		$this->options->page = intval($this->options->page);
 
-		$this->tableMap = $this->buildTableMap(Core\Parse::csv($this->options->linked));
-		$this->tables = $this->getTables();
+		if (empty($this->options->template)) {
+			return 'Please provide a value for the <code>template</code> parameter!';
+		}
 
 		if (is_readable(AM_BASE_DIR . $this->options->template)) {
 			$this->options->template = file_get_contents(AM_BASE_DIR . $this->options->template);
 		}
-		
-		$this->prepareModel();
+
+		if (empty($this->options->prefix)) {
+			return 'Please provide a value for the <code>prefix</code> parameter!';
+		}
+
+		$AirmadModel = new AirmadModel($this->options); 
+		$this->records = $AirmadModel->getRecords();
+		$this->filterData = $AirmadModel->getFilterData();
+		$AirmadModel = NULL;
+
 		$this->filter();
 
-		$count = count($this->tables[$this->options->table]);
+		$count = count($this->records);
 
 		$this->slice();
 
@@ -113,84 +116,7 @@ class Airmad {
 		));
 
 		AirmadRuntime::register($hash);
-		$this->tables = NULL;
-
-	}
-
-
-	/**
-	 *	Builds a map of fields linked to tables by passing an array of strings like "field => table".
-	 *
-	 *	@param array $links
-	 *	@return array The map array
-	 */
-
-	private function buildTableMap($links) {
-
-		$tableMap = array();
-
-		foreach ($links as $link) {
-
-			$parts = preg_split('/\s*\=\>\s*/', $link);
-
-			if (!empty($parts)) {
-
-				$field = $parts[0];
-				$table = $field;
-
-				if (!empty($parts[1])) {
-					$table = $parts[1];
-				}
-
-				$tableMap[$field] = $table;
-
-			}	
-
-		}
-
-		return $tableMap;
-
-	}
-
-
-	/**
-	 *	Links records of linked tables and creates record id field.
-	 */
-
-	private function prepareModel() {
-	
-		array_walk($this->tables[$this->options->table], function(&$record) {
-
-			foreach ($record->fields as $fieldName => $ids) {
-
-				if (in_array($fieldName, array_keys($this->tableMap))) {
-
-					$linkedRecords = array();
-					$tableName = $this->tableMap[$fieldName];
-
-					foreach ($ids as $id) {
-						
-						$key = array_search($id, array_column($this->tables[$tableName], 'id'));
-
-						if ($key !== false) {
-							$linkedRecordFields = $this->tables[$tableName][$key]->fields;
-							$linkedRecordFields->{$this->idFieldName} = $id;
-							$linkedRecords[] = $linkedRecordFields;
-						}
-
-					}
-					
-					$record->fields->{$fieldName} = $linkedRecords;
-					$linkedRecords = NULL;
-
-				}
-
-			}
-			
-			// Make id accessible within fields.
-			$record->fields->{$this->idFieldName} = $record->id;
-
-		});
+		
 
 	}
 
@@ -219,7 +145,7 @@ class Airmad {
 			return false;
 		}
 
-		$this->tables[$table] = array_filter($this->tables[$table], function($record) use ($filters) {
+		$this->records = array_filter($this->records, function($record) use ($filters) {
 
 			foreach ($filters as $filter => $value) {
 
@@ -247,7 +173,7 @@ class Airmad {
 				}
 
 				if ($data) {
-					$match = preg_match("/{$value}/is", $data);
+					$match = preg_match("/$value/is", $data);
 				} else {
 					$match = false;
 				}
@@ -273,7 +199,6 @@ class Airmad {
 
 	private function render() {
 
-		$output = '';
 		$handlebars = new Handlebars(array('enableDataVariables' => true));
 
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
@@ -316,130 +241,16 @@ class Airmad {
 
 		});	
 
-		foreach ($this->tables[$this->options->table] as $record) {
-			$output .= $handlebars->render($this->options->template, $record->fields);
-		}
-		
-		return $output;
+		return $handlebars->render(
+			$this->options->template, 
+			array(
+				'records' => $this->records,
+				'filterData' => $this->filterData
+			)
+		);
 
 	}
 	
-
-	/**
-	 *	Get all required tables including the linked ones. 
-	 *
-	 *	@return array The tables array.
-	 */
-
-	private function getTables() {
-
-		$tables = array();
-		$tables[$this->options->table] = $this->getRecords($this->options->table, $this->options->view);
-		
-		foreach (array_values($this->tableMap) as $tableName) {
-			$tables[$tableName] = $this->getRecords($tableName);
-		}
-
-		return $tables;
-
-	}
-
-
-	/**
-	 *	Requests all records of a table.
-	 *
-	 *	@param string $table
-	 *	@param string $view
-	 */
-
-	private function getRecords($table, $view = false) {
-
-		$cache = new AirmadCache($this->options->base, $table, $view);
-
-		if ($records = $cache->load()) {
-			return $records;
-		}
-
-		$table = rawurlencode($table);
-		$records = array();		
-		$url = "$this->apiUrl/{$this->options->base}/$table";
-
-		$query = array(
-			'maxRecords' => 100000,
-			'pageSize' => 100,
-			'view' => $view
-		);
-
-		$query = array_filter($query);
-
-		$offset = true;
-		
-		while ($offset) {
-
-			if (strlen($offset) > 1) {
-				$query['offset'] = $offset;
-			} 
-
-			$queryString = http_build_query($query);
-
-			$data = $this->request("$url?$queryString");
-
-			if (isset($data->offset)) {
-				$offset = $data->offset;
-			} else {
-				$offset = false;
-			}
-
-			if (!empty($data->records)) {
-				$records = array_merge($records, $data->records);
-			}
-
-		}
-
-		$cache->save($records);
-
-		return $records;
-
-	}
-
-
-	/**
-	 *	Makes an API curl request.
-	 *
-	 *	@param string $url
-	 */
-
-	private function request($url) {
-
-		$data = array();
-		$header = array();
-
-		$header[] = 'Content-type: application/json';
-		$header[] = "Authorization: Bearer $this->token";
-
-		$options = array(
-			CURLOPT_HTTPHEADER => $header,
-			CURLOPT_RETURNTRANSFER => 1, 
-			CURLOPT_TIMEOUT => 300,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_FRESH_CONNECT => 1,
-			CURLOPT_URL => $url
-		);
-		
-		$curl = curl_init();
-		curl_setopt_array($curl, $options);
-		$output = curl_exec($curl);
-		
-		if (curl_getinfo($curl, CURLINFO_HTTP_CODE) == 200 && !curl_errno($curl)) {	
-			$data = json_decode($output);
-		}
-		
-		curl_close($curl);
-
-		return $data;
-
-	}
-
 
 	/**
 	 *	Slices the main records array of the main table to fit the pagination settings.
@@ -449,8 +260,8 @@ class Airmad {
 
 		$offset = ($this->options->page - 1) * $this->options->limit;
 		
-		$this->tables[$this->options->table] = array_slice(
-			$this->tables[$this->options->table],
+		$this->records = array_slice(
+			$this->records,
 			$offset,
 			$this->options->limit
 		);
