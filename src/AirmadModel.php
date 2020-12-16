@@ -260,7 +260,7 @@ class AirmadModel {
 
 		return (object) array(
 			'records' => $this->records,
-			'filterData' => $this->filterData
+			'filters' => $this->filterData
 		);
 
 	}
