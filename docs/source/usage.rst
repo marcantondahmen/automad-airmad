@@ -14,45 +14,46 @@ theme that supports Automad's block editor. The markup looks as follows:
 
     <@ Airmad/Airmad {
         base: 'appXXXXXXXXXXXXXX',
-        table: 'Products',
-        view: 'Grid view',
-        linked: 'Type',
+        table: 'Design projects',
+        view: 'All projects',
+        filters: 'Client, Category',
+        linked: 'Client => Clients',
+        prefix: ':example',
         template: '
-            <div class="card">
-                <div class="card-content uk-panel uk-panel-box">
-                    <div class="uk-panel-title">
-                        {{ Name }}
+            {{#records}}
+                {{#fields}}
+                    <div class="card">
+                        <h3>{{Name}}</h3>
+                        <p>
+                            {{#Client}}
+                                {{Name}}
+                            {{/Client}}
+                        </p>
                     </div>
-                    <p>
-                        {{# Type }}
-                            <i>{{ Name }}</i>
-                        {{/ Type }}
-                    </p>
-                </div>
-            </div>
+                {{/fields}}
+            {{/records}}
         ',
-        filters: 'Name, Type',
         limit: 20,
-        page: @{ ?page | 1 }
+        page: @{ ?Page | def(1) }
     } @>
 
 The code above doesn't produce any output. Instead it populates some Runtime 
 `variables <#runtime-variables>`_ that can be used in the 
-Automad template to at any point after the Airmad instance above. 
-To display the generated output, the ``:airmadOutput`` variable can be used in a 
+Automad template to at any point after the Airmad instance above. Note the ``prefix`` 
+parameter. The prefix is required to make sure that all runtime variables have unique names.
+To display the generated output, the ``:exampleOutput`` variable can be used in a 
 template for example as follows.
 
 .. code-block:: php
 
-    <div class="cards grid am-stretched">
-        @{ :airmadOutput }
+    <div class="cards">
+        @{ :exampleOutput }
     </div>
 
 .. attention:: 
 
-    In case you want to use multiple Airmad instances on one page, you will have to 
-    define unique prefixes for each one in order to avoid conflicts between them. Read more about
-    using `multiple <#multiple-instances>`_ instances below.
+    In case you want to use multiple Airmad instances on your site, you will have to 
+    define unique prefixes for each one in order to avoid conflicts between them. 
 
 Options
 -------
@@ -60,28 +61,29 @@ Options
 The example above shows a typical use case of an Airtable integration. 
 Find below a list of all availabe options.
 
-==============  ===============================================================================
+==============  ====================================================================================
 Name            Description
-==============  ===============================================================================
+==============  ====================================================================================
 ``base``        The Airtable base ID
 ``table``       The main table to be used to pull records from
 ``view``        The view of the main `table` to be used
+``prefix``      A **required** prefix for the generated runtime variables --- 
+                prefixes have to be unique, in case 
+                more than one Airmad instance is used on the site 
 ``linked``      A comma separated list of tables that are linked to a field  
                 of the main table records --- note that is only required to list linked tables 
                 here that include information that you want to display. In case the field name 
                 differs from the actual table name to be linked, it is also possible to pass 
                 a list of strings like ``fieldName1 => tableName1, fieldName2 => tableName2`` 
                 to the parameter to link such fields to any table.
-``template``    The Handlebar template to be used to render a record --- 
+``template``    The Handlebar template to be used to render the model 
+                (the collection of records) --- 
                 can be either a string, a variable containing a string or a file path
 ``filters``     A comma separated list of fields that can be used to filter the records by --- 
                 check out the examples below for more information about :doc:`filtering <filters>`
 ``limit``       The maximum number of records to be displayed on a page
 ``page``        The current page of records (pagination)
-``prefix``      An optional prefix for the generated runtime variables instead of the 
-                default ``:airmad`` --- it is required to define unique prefixes, in case 
-                `more than one <#multiple-instances>`_ Airmad instance is used on a page
-==============  ===============================================================================
+==============  ====================================================================================
 
 Runtime Variables
 -----------------
@@ -91,49 +93,17 @@ Aside from the output, Airmad provides more variables as shown in the table belo
 ==================  ===============
 Name                Description
 ==================  ===============
-``:airmadOutput``   The rendered output of the table records
-``:airmadCount``    The number of found records
-``:airmadPage``     The current page number --- this has to be seen in context to 
+``:prefixOutput``   The rendered output of the table records
+``:prefixCount``    The number of found records
+``:prefixPage``     The current page number --- this has to be seen in context to 
                     the ``limit`` of items displayed on a page
-``:airmadPages``    The amount of pages the records are spread over, 
+``:prefixPages``    The amount of pages the records are spread over, 
                     also related to the ``limit`` option
-``:airmadMemory``   The max memory used by Automad in bytes
+``:prefixMemory``   The max memory used by Automad in bytes
 ==================  ===============
 
 .. attention::
 
-    Note that you can define an unique prefix to be used instead of ``:airmad*`` in the 
+    Note that you **must** define an unique prefix to be used instead of ``:prefix*`` in the 
     Airmad `options <#options>`_ when creating a new instance.
 
-Multiple Instances
-------------------
-
-As soon as you want to use filters and select dropdowns to let a user control the displayed 
-set of records on a page, you will have to use multiple instances of Airmad on one page. 
-For example one instance request all records of a fictional table called ``Type`` 
-to generate a list of all existing product types in your database, while another one 
-gets the actual products for example from a table called ``Products``. 
-To avoid overwriting the output the first table with the output of the second one, 
-the generated runtime variables need to have a unique prefix that can be defined in the 
-options by using the ``prefix`` parameter.
-
-.. code-block:: php
-   :emphasize-lines: 6,8,15,17
-
-    <@ Airmad/Airmad {
-        base: 'appXXXXXXXXXXXXXX',
-        table: 'Type',
-        view: 'Grid view',
-        template: '<option value="{{ Name }}">',
-        prefix: ':type'
-    } @>
-    @{ :typeOutput }
-
-    <@ Airmad/Airmad {
-        base: 'appXXXXXXXXXXXXXX',
-        table: 'Products',
-        view: 'Grid view',
-        template: '<option value="{{ Name }}">',
-        prefix: ':products'
-    } @>
-    @{ :productsOutput }

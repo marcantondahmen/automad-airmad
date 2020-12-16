@@ -6,68 +6,91 @@ In Airmad filtering records is pretty straight forward. The following example
 demonstrated the basic idea:
 
 .. code-block:: php
-   :emphasize-lines: 2,3,10,12
+   :emphasize-lines: 2,3,9,10
 
     <form action="">
-        <input type="text" name="Name" value="@{ ?Name }">
-        <input type="text" name="Type" value="@{ ?Type }">
+        <input type="text" name="Category">
+        <input type="text" name="Client">
     </form>
-    <ul>
     <@ Airmad/Airmad {
         base: 'appXXXXXXXXXXXXXX',
-        table: 'Products',
-        view: 'Grid view',
-        linked: 'Type',
-        template: '<li>{{ Name }}</li>',
-        filters: 'Name, Type',
+        table: 'Design projects',
+        view: 'All projects',
+        filters: 'Client, Category',
+        linked: 'Client => Clients',
+        template: '
+            {{#records}}
+                {{#fields}}
+                    <div class="card">
+                        <h3>{{Name}}</h3>
+                        <p>
+                            {{#Client}}
+                                {{Name}}
+                            {{/Client}}
+                        </p>
+                    </div>
+                {{/fields}}
+            {{/records}}
+        ',
         limit: 20,
         page: @{ ?Page | def(1) }
     } @>
-    </ul>
 
 In the snippet above, we have a simple form at the top including two input fields 
-with the names ``Name`` and ``Type``. The Airmad instance below that form has those names defined as ``filters`` as you 
-can see in the highlighted line. Note that since in this example **Type** is a linked table, defining the ``linked`` parameter
+with the names ``Category`` and ``Client``. The Airmad instance below that form has those names defined as ``filters`` as you 
+can see in the highlighted line. Note that since in this example **Client** is a linked table, defining the ``linked`` parameter
 allows for searching in linked records as well.
 
 Autocompletion
 --------------
 
-To enhance the user experience for your visitors, you might want to provide an autocompletion list of **Type** names
-for the second input field. You can simply use a second Airmad instance to pull all type names from the **Type** table and
-populate such a list with the ``Name`` field of each record. In the following example we use a datalist for such purpose.
-
-.. warning:: 
-    
-    Note in the snippet below that this time the **prefix** parameter must be set to a 
-    unique value to avoid conflict between both Airmad instances.
+To enhance the user experience for your visitors, you might want to provide an autocompletion list of categories 
+for the **Category** input and **Client** names for the second input field. 
+The Airmad data model contains a **filters** element at the top level for such purpose. It contains lists of 
+records that are contained in any item in the **records** fields for each item defined in the ``filters`` option.
+Here for example it contains all **Client** elements that match any record in the **records** list. You can use 
+those filters as follows:
 
 .. code-block:: php
-   :emphasize-lines: 9,12
+   :emphasize-lines: 1,3,5,9,11,23
 
-    <form action="">
-        <input type="text" name="Name" value="@{ ?Name }">
-        <input type="text" list="types" name="Type" value="@{ ?Type }">
-        <@ Airmad/Airmad {
-            base: 'appXXXXXXXXXXXXXX',
-            table: 'Types',
-            view: 'Grid view',
-            template: '<option value="{{ Name }}">',
-            prefix: ':type'
-        } @>
-        <datalist id="types">
-            @{ :typeOutput }
-        </datalist>
-    </form>
-    <ul>
+    {{#with filters}}
+        <form action="">
+            <input type="text" list="Categories" name="Category">
+            <datalist id="Categories">
+                {{#each Category}}
+                    <option value="{{this}}">
+                {{/each}}
+            </datalist>
+            <input type="text" list="Clients" name="Client">
+            <datalist id="Clients">
+                {{#each Client}}
+                    <option value="{{Name}}">
+                {{/each}}
+            </datalist>
+            <button type="submit">Apply</button>
+        </form>
+    {{/with}}
     <@ Airmad/Airmad {
         base: 'appXXXXXXXXXXXXXX',
-        table: 'Products',
-        view: 'Grid view',
-        linked: 'Type => Types',
-        template: '<li>{{ Name }}</li>',
-        filters: 'Name, Type',
+        table: 'Design projects',
+        view: 'All projects',
+        linked: 'Client => Clients',
+        filters: 'Client, Category',
+        template: '
+            {{#records}}
+                {{#fields}}
+                    <div class="card">
+                        <h3>{{Name}}</h3>
+                        <p>
+                            {{#Client}}
+                                {{Name}}
+                            {{/Client}}
+                        </p>
+                    </div>
+                {{/fields}}
+            {{/records}}
+        ',
         limit: 20,
         page: @{ ?Page | def(1) }
     } @>
-    </ul>

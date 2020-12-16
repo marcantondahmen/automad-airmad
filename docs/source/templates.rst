@@ -2,19 +2,81 @@ Templates
 =========
 
 As mentioned earlier, Airmad uses `Handlebars <https://github.com/salesforce/handlebars-php#expressions>`_ 
-to render record data. While iterating table records, all record fields are exposed to the engine 
-and can be accessed by using the normal variable tags. For example to get the ``Name`` of a record, 
-you can simply use ``{{ Name }}`` in a template. 
-Aside from the default tags, Airmad provides some other useful helpers to let you easily use fields in 
-linked tables or build slideshow.
+to render table data. Basically all model data is structured in a multi-dimensional array and can be accessed in a template.
+You can see the actual data while developing your templates by enabling `debugging`_. 
+
+Data model
+----------
+
+The model contains three main elements --- records, filters and query. A typical structure looks as follows:
+
+.. code-block:: php
+    :emphasize-lines: 1,14,16
+
+    records
+        record
+            id
+            fields
+                column
+                column
+                ...
+        record
+            id
+            fields
+                column
+                column
+                ...
+    filters
+        ...
+    query 
+        ...
+
+==============	===============================================================================
+Name			Description
+==============	===============================================================================
+``records``		The records element basically contains all rows in the given table 
+``filters``     The filters reprensent a relevant and unique collection of items of columns   
+                specified in the filters option that match the actual set of records 
+``query``		The query element contains all parameters of the query string 
+==============	===============================================================================
+
+In a template you can therefore iterate all records using the **Handlebars** syntax as demonstarted below.
+Note that ``column`` just represents any column name in your table.
+
+.. code-block:: php
+
+    {{#records}}
+        {{#fields}}
+            {{column}}
+        {{/fields}}
+    {{/records}}
+
+To access a parameter in a query string like for example ``https://domain.com?parameter=value`` you can simply use:
+
+.. code-block:: php
+
+    {{query.parameter}}
+
+.. attention::
+
+    Airtable provides some example bases when setting up an account. The Airmad repository includes some 
+    example snipptes that are made to work with the **Project tracker** example base of Airtable. 
+    Take a look at the example template on `GitHub <https://github.com/marcantondahmen/automad-airmad/tree/master/snippets>`_.
+
+Debugging
+---------		
+
+To quickly understand the actual structure of the model returned by the Airtable API, you can enable the 
+`Debug Mode <https://automad.org/system/debugging>`_ in Automad and then take a look at the browser console.
+Since there will be a lot of output, you can then simply filter the console by ``Airmad->Airmad``. 
 
 Image Sliders
 -------------
 
 In case your table has an attachement field, you can use the ``{{#slider images}}`` or 
 ``{{#sliderLarge images}}`` helper functions to create an image slider containing all 
-provided images as that are listed in a field called ``images``. By default the slide will 
-have an aspect ratio of 1:1 --- in other words a height of 100% relative to the width. 
+provided images as that are listed in a field called ``images`` in the field context of a record. 
+By default the slide will have an aspect ratio of 1:1 --- in other words a height of 100% relative to the width. 
 You can pass an optional second argument to the helper to define a custom height as follows:
 
 .. code-block:: php
@@ -136,4 +198,5 @@ useful in case you need to concatenate a list of items with a comma:
         <i>{{Name}}</i>{{#unless @last}},{{/unless}}
     {{/each}}
 
-You can find more about the use of data variables in `here <https://github.com/salesforce/handlebars-php#data-variables-for-each>`_.
+You can find more about the use of data variables in 
+`here <https://github.com/salesforce/handlebars-php#data-variables-for-each>`_.

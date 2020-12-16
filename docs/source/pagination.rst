@@ -4,8 +4,8 @@ Pagination
 In many cases, the amount of records in a table is simple to much for a single page.
 You will probably break down the list of records into multiple pages by setting the ``limit``
 `option <usage.html#options>`_ to a fixed number. To help you building a simple pagination navigation,
-Airmad provides the ``:airmadPage`` and ``:airmadPages`` `runtime <usage.html#runtime-variables>`_ 
-variables.
+Airmad provides the ``:[prefix]Page`` and ``:[prefix]Pages`` `runtime <usage.html#runtime-variables>`_ 
+variables. As mentioned before, please replace `:[prefix]` with a unique string in the Airmad options.
 
 Example
 -------
@@ -20,8 +20,8 @@ A very simple example for a pagination within an Automad snippet could look as f
             <li><a href="?<@ queryStringMerge { Page: @{ ?Page | -1 } } @>">←</a></li>
         <@ end @>
 
-        <@ for @{ :airmadPage | -3 } to @{ :airmadPage | +3 } @>
-            <@ if @{ :i } > 0 and @{ :i } <= @{ :airmadPages } @>
+        <@ for @{ :prefixPage | -3 } to @{ :prefixPage | +3 } @>
+            <@ if @{ :i } > 0 and @{ :i } <= @{ :prefixPages } @>
                 <li>
                     <a 
                     href="?<@ queryStringMerge { Page: @{ :i } } @>" 
@@ -33,7 +33,7 @@ A very simple example for a pagination within an Automad snippet could look as f
             <@ end @>
         <@ end @>
 
-        <@ if @{ ?Page } < @{ :airmadPages } @>
+        <@ if @{ ?Page } < @{ :prefixPages } @>
             <li><a href="?<@ queryStringMerge { Page: @{ ?Page | +1 } } @>">→</a></li>
         <@ end @>
 
