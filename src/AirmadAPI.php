@@ -18,6 +18,13 @@ class AirmadAPI {
 
 
 	/**
+	 *	The base URL of the Airtable API.
+	 */
+
+	private $apiUrl = 'https://api.airtable.com/v0';
+
+
+	/**
 	 *	The options array.
 	 */
 
