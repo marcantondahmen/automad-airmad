@@ -261,7 +261,7 @@ class AirmadModel {
 		return (object) array(
 			'records' => $this->records,
 			'filters' => $this->filterData,
-			'get' => $_GET
+			'query' => $_GET
 		);
 
 	}
