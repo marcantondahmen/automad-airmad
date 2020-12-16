@@ -39,5 +39,5 @@ A very simple example for a pagination within an Automad snippet could look as f
 
     </ul>
 
-You can simply copy and paste this into a snippet block after creating an Airmad instance. 
+You can simply copy and paste this into a snippet block after creating an Airmad instance and change the prefix. 
 The classes in use will work out of the box with the **Standard** and **Adam** themes.

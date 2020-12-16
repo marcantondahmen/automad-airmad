@@ -3,7 +3,7 @@ Filters
 
 Searching and filtering are essential functions for displaying database content. 
 In Airmad filtering records is pretty straight forward. The following example 
-demonstrated the basic idea:
+demonstrates the basic idea:
 
 .. code-block:: php
    :emphasize-lines: 2,3,9,10
@@ -47,9 +47,9 @@ Autocompletion
 To enhance the user experience for your visitors, you might want to provide an autocompletion list of categories 
 for the **Category** input and **Client** names for the second input field. 
 The Airmad data model contains a **filters** element at the top level for such purpose. It contains lists of 
-records that are contained in any item in the **records** fields for each item defined in the ``filters`` option.
-Here for example it contains all **Client** elements that match any record in the **records** list. You can use 
-those filters as follows:
+records that are contained in one ore more items in **records** for each name defined in the ``filters`` option.
+In the following example, such **filters** element contains all **Client** elements that match any record in the 
+**records** list. You can use those filters as follows:
 
 .. code-block:: php
    :emphasize-lines: 1,3,5,9,11,23

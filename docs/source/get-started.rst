@@ -4,7 +4,7 @@ Get Started
 Airtable is a great tool to quickly create your own database using a intuitive UI. 
 While the possibilities of structuring data go far beyond the capabilities of **Automad** 
 as a blogging platform, you might find out that Airtable lacks of flexibility and 
-design options when it comes to sharing tables publicly. This is where Airmad comes in. 
+design options when it comes to sharing tables publicly. This is where **Airmad** comes in. 
 The concept is rather simple. Airmad pulls a table --- and optionally also its **linked** tables ---
 using Airtable's REST API. To speed things up and align them with the user experience 
 of a small and lightweight Automad site, all retrieved recordes are cached on your server. 

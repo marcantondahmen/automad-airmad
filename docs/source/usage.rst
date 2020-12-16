@@ -11,6 +11,7 @@ theme that supports Automad's block editor. The markup looks as follows:
     **Template Snippet** block on any page in the Automad dashboard. 
 
 .. code-block:: php
+   :emphasize-lines: 7
 
     <@ Airmad/Airmad {
         base: 'appXXXXXXXXXXXXXX',
@@ -39,12 +40,13 @@ theme that supports Automad's block editor. The markup looks as follows:
 
 The code above doesn't produce any output. Instead it populates some Runtime 
 `variables <#runtime-variables>`_ that can be used in the 
-Automad template to at any point after the Airmad instance above. Note the ``prefix`` 
-parameter. The prefix is required to make sure that all runtime variables have unique names.
+Automad template at any point after the Airmad instance above. Note the ``prefix`` 
+parameter. The prefix is **required** to make sure that all runtime variables have **unique** names.
 To display the generated output, the ``:exampleOutput`` variable can be used in a 
 template for example as follows.
 
 .. code-block:: php
+   :emphasize-lines: 2
 
     <div class="cards">
         @{ :exampleOutput }
@@ -52,8 +54,8 @@ template for example as follows.
 
 .. attention:: 
 
-    In case you want to use multiple Airmad instances on your site, you will have to 
-    define unique prefixes for each one in order to avoid conflicts between them. 
+    In case you want to use multiple Airmad instances on your **site**, you will have to 
+    define **unique prefixes** for each one in order to avoid conflicts between them. 
 
 Options
 -------
@@ -88,7 +90,8 @@ Name            Description
 Runtime Variables
 -----------------
 
-Aside from the output, Airmad provides more variables as shown in the table below.
+Aside from the output, Airmad provides more variables as shown in the table below. Note that ``:prefix`` can be 
+replaced with any other valid string and is just used for demonstration here.
 
 ==================  ===============
 Name                Description

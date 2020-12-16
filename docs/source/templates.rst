@@ -2,13 +2,13 @@ Templates
 =========
 
 As mentioned earlier, Airmad uses `Handlebars <https://github.com/salesforce/handlebars-php#expressions>`_ 
-to render table data. Basically all model data is structured in a multi-dimensional array and can be accessed in a template.
+to render table data. Basically all **model** data is structured in a multi-dimensional array and can be accessed in a template.
 You can see the actual data while developing your templates by enabling `debugging`_. 
 
-Data model
-----------
+Model
+-----
 
-The model contains three main elements --- records, filters and query. A typical structure looks as follows:
+The model contains three main elements --- **records**, **filters** and **query**. A typical structure looks as follows:
 
 .. code-block:: php
     :emphasize-lines: 1,14,16
@@ -51,7 +51,7 @@ Note that ``column`` just represents any column name in your table.
         {{/fields}}
     {{/records}}
 
-To access a parameter in a query string like for example ``https://domain.com?parameter=value`` you can simply use:
+To access a parameter in a **query string** like for example ``https://domain.com?parameter=value`` you can simply use:
 
 .. code-block:: php
 
@@ -172,9 +172,9 @@ In a template you can therefore simple loop over the types and get the ``Name`` 
 
 .. code-block:: php
 
-    {{# Type }}
-        {{ Name }}
-    {{/ Type }}
+    {{#Type}}
+        {{Name}}
+    {{/Type}}
 
 Each Loops
 ----------
@@ -184,9 +184,9 @@ loop over items like:
 
 .. code-block:: php
 
-    {{# Type }}
-        {{ Name }}
-    {{/ Type }}
+    {{#Type}}
+        {{Name}}
+    {{/Type}}
 
 You can alternatively use the ``{{#each Type}} ... {{/each}}`` helper to get more access to 
 built-in data variables like ``@first``, ``@last`` and ``@index``. This is for example very 
@@ -200,3 +200,11 @@ useful in case you need to concatenate a list of items with a comma:
 
 You can find more about the use of data variables in 
 `here <https://github.com/salesforce/handlebars-php#data-variables-for-each>`_.
+
+Handlebars Helpers
+------------------
+
+Aside from the examples above, Handlebars offers even more helpers that can be used in templates 
+such as ``with``, ``if``, ``unless`` and others. 
+You can find the `documentation <https://github.com/salesforce/handlebars-php#control-structures>`_ 
+of those features as well on GitHub. 
