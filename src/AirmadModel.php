@@ -260,7 +260,8 @@ class AirmadModel {
 
 		return (object) array(
 			'records' => $this->records,
-			'filters' => $this->filterData
+			'filters' => $this->filterData,
+			'get' => $_GET
 		);
 
 	}
@@ -283,15 +284,19 @@ class AirmadModel {
 
 			foreach ($records as $record) {
 
-				if (is_array($record->fields->$filter)) {
+				if (!empty($record->fields->$filter)) {
 
-					foreach ($record->fields->$filter as $item) {
-						$filterRecords[md5(serialize($item))] = $item;
+					if (is_array($record->fields->$filter)) {
+
+						foreach ($record->fields->$filter as $item) {
+							$filterRecords[md5(serialize($item))] = $item;
+						}
+	
+					} else {
+	
+						$filterRecords[$record->fields->$filter] = $record->fields->$filter;
+	
 					}
-
-				} else {
-
-					$filterRecords[$record->fields->$filter] = $record->fields->$filter;
 
 				}
 
