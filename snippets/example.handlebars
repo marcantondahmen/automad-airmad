@@ -1,10 +1,10 @@
 <form id="example" action="" class="uk-flex uk-flex-space-between">
 	{{#with filters}}
-		<input class="uk-button uk-width-medium-3-10" type="text" list="Categories" name="Category" placeholder="Category" value="{{../get.Category}}">
+		<input class="uk-button uk-width-medium-3-10" type="text" list="Categories" name="Category" placeholder="Category" value="{{../query.Category}}">
 		<datalist id="Categories">
 			{{#each Category}}<option value="{{this}}">{{/each}}
 		</datalist>
-		<input class="uk-button uk-width-medium-3-10" type="text" list="Clients" name="Client" placeholder="Client" value="{{../get.Client}}">
+		<input class="uk-button uk-width-medium-3-10" type="text" list="Clients" name="Client" placeholder="Client" value="{{../query.Client}}">
 		<datalist id="Clients">
 			{{#each Client}}<option value="{{Name}}">{{/each}}
 		</datalist>
