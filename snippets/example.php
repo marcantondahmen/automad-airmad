@@ -9,6 +9,4 @@
 	prefix: ':example'
 } @>
 
-
-@{ :exampleMemory | /1024 | /1024 }<br>
 @{ :exampleOutput }
