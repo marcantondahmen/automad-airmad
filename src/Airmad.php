@@ -20,24 +20,10 @@ class Airmad {
 
 
 	/**
-	 *	The base URL of the Airtable API.
+	 *	The data model.
 	 */
 
-	private $apiUrl = 'https://api.airtable.com/v0';
-
-
-	/**
-	 *	The filter data array to be used to create autocomplete data lists for input fields or select fields.
-	 */
-
-	private $filterData = array();
-
-
-	/**
-	 *	The actual records array.
-	 */
-
-	private $records = array();
+	private $model;
 
 
 	/**
