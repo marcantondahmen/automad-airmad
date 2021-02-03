@@ -34,11 +34,11 @@ The model contains three main elements --- **records**, **filters** and **query*
 ======================	===============================================================================
 Name					Description
 ======================	===============================================================================
-``records``				The records element basically contains all rows in the given table 
-``filters``				A collection of items of columns specified in the filters option
+``records``	            The records element basically contains all rows in the given table 
+``filters``	            A collection of items of columns specified in the filters option
 ``filteredFilters``     The **filteredFilters** reprensent a relevant and unique collection of items 
-						of columns specified in the filters option that match the actual set of records 
-``query``				The query element contains all parameters of the query string 
+                        of columns specified in the filters option that match the actual set of records 
+``query``               The query element contains all parameters of the query string 
 ======================	===============================================================================
 
 In a template you can therefore iterate all records using the **Handlebars** syntax as demonstarted below.
