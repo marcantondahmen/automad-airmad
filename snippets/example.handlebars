@@ -1,10 +1,10 @@
 <form id="example" action="" class="uk-flex uk-flex-space-between">
-	{{#with filters}}
-		<input class="uk-button uk-width-medium-3-10" type="text" list="Categories" name="Category" placeholder="Category" value="{{../query.Category}}">
+	{{#with filteredFilters}}
+		<input class="uk-button uk-width-medium-3-10" type="text" list="Categories" name="Category" placeholder="Category" value="{{../query.Category}}" autocomplete="off">
 		<datalist id="Categories">
 			{{#each Category}}<option value="{{this}}">{{/each}}
 		</datalist>
-		<input class="uk-button uk-width-medium-3-10" type="text" list="Clients" name="Client" placeholder="Client" value="{{../query.Client}}">
+		<input class="uk-button uk-width-medium-3-10" type="text" list="Clients" name="Client" placeholder="Client" value="{{../query.Client}}" autocomplete="off">
 		<datalist id="Clients">
 			{{#each Client}}<option value="{{Name}}">{{/each}}
 		</datalist>
@@ -14,7 +14,7 @@
 
 <script src="/packages/airmad/airmad/snippets/example.js"></script>
 
-<div class="am-stretched grid cards">
+<div class="am-stretched cards" style="grid-auto-rows: auto;">
 	{{#records}}
 		{{#fields}}
 			<div class="card">

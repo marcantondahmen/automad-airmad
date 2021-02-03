@@ -26,7 +26,7 @@ The first part is the template string:
         :base: 'appXXXXXXXXXXXXXX',
         :tmplt: '
             <form id="example" action="" class="uk-flex uk-flex-space-between">
-                {{#with filters}}
+                {{#with filteredFilters}}
                     <input 
                     class="uk-button uk-width-medium-3-10" 
                     type="text" list="Categories" 

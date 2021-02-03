@@ -31,14 +31,15 @@ The model contains three main elements --- **records**, **filters** and **query*
     query 
         ...
 
-==============	===============================================================================
-Name			Description
-==============	===============================================================================
-``records``		The records element basically contains all rows in the given table 
-``filters``     The filters reprensent a relevant and unique collection of items of columns   
-                specified in the filters option that match the actual set of records 
-``query``		The query element contains all parameters of the query string 
-==============	===============================================================================
+======================	===============================================================================
+Name					Description
+======================	===============================================================================
+``records``				The records element basically contains all rows in the given table 
+``filters``				A collection of items of columns specified in the filters option
+``filteredFilters``     The **filteredFilters** reprensent a relevant and unique collection of items 
+						of columns specified in the filters option that match the actual set of records 
+``query``				The query element contains all parameters of the query string 
+======================	===============================================================================
 
 In a template you can therefore iterate all records using the **Handlebars** syntax as demonstarted below.
 Note that ``column`` just represents any column name in your table.
@@ -93,11 +94,12 @@ It is also possible to get the original image in a slider as follows:
 If Equals
 ---------
 
-In case you quickly want to compare a field value with any string or number you can use the ``if==`` helper: 
+In case you quickly want to compare a field value with any other value or string you can use the ``if==`` helper: 
 
 .. code-block:: php
 
-    {{#if== field, value}} ... {{/if==}}
+    {{#if== field, "value"}} ... {{/if==}}
+	{{#if== field, otherField}} ... {{/if==}}
 
 If Not Equals
 -------------
@@ -106,7 +108,8 @@ The counterpart to ``if==`` helper is the ``if!=`` helper that lets you check fo
 
 .. code-block:: php
 
-    {{#if!= field, value}} ... {{/if!=}}
+    {{#if!= field, "value"}} ... {{/if!=}}
+	{{#if!= field, otherField}} ... {{/if!=}}
 
 Record ID
 ---------

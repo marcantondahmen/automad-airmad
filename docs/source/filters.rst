@@ -49,12 +49,14 @@ for the **Category** input and **Client** names for the second input field.
 The Airmad data model contains a **filters** element at the top level for such purpose. It contains lists of 
 records that are contained in one ore more items in **records** for each name defined in the ``filters`` option.
 In the following example, such **filters** element contains all **Client** elements that match any record in the 
-**records** list. You can use those filters as follows:
+**records** list. Note that it is also possible to just have a reduced list of filters that actually match an
+already filtered set of records. Such a reduced list can be accessed by using the **filteredFilters** element.
+You can use filters as follows:
 
 .. code-block:: php
    :emphasize-lines: 1,3,5,9,11,23
 
-    {{#with filters}}
+    {{#with filteredFilters}}
         <form action="">
             <input type="text" list="Categories" name="Category">
             <datalist id="Categories">
