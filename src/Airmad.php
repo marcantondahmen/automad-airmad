@@ -107,6 +107,34 @@ class Airmad {
 
 
 	/**
+	 *	Resolves the values for a given CSV list. Values can either be double quoted strings or field names.
+	 *	Field names are resolved than to a value while strings will just have their wrapping quotes removed.
+	 *
+	 *	@param string $csv 
+	 *	@param object $context 
+	 *	@return array An array with all resolved values
+	 */
+
+	private function resolveCsvArgs($csv, $context) {
+
+		$args = array();
+
+		foreach (Core\Parse::csv($csv) as $arg) {
+
+			if (preg_match('/"([^"]*)"/', $arg, $matches)) {
+				$args[] = $matches[1];
+			} else {
+				$args[] = $context->get($arg);
+			}
+
+		}
+
+		return $args;
+
+	}
+
+
+	/**
 	 *	Renders an item template.
 	 *
 	 *	@return string The rendered output.
@@ -126,10 +154,10 @@ class Airmad {
 
 		$handlebars->addHelper('if==', function($template, $context, $args, $source) {
 
-			$argsArray = Core\Parse::csv($args);
+			$argsArray = $this->resolveCsvArgs($args, $context);
 
 			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if ($context->get($argsArray[0]) == $argsArray[1]) {
+				if ($argsArray[0] == $argsArray[1]) {
 					$buffer = $template->render($context);
 					$template->discard();
 					return $buffer;
@@ -142,10 +170,10 @@ class Airmad {
 
 		$handlebars->addHelper('if!=', function($template, $context, $args, $source) {
 
-			$argsArray = Core\Parse::csv($args);
+			$argsArray = $this->resolveCsvArgs($args, $context);
 
 			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if ($context->get($argsArray[0]) != $argsArray[1]) {
+				if ($argsArray[0] != $argsArray[1]) {
 					$buffer = $template->render($context);
 					$template->discard();
 					return $buffer;
