@@ -99,7 +99,7 @@ In case you quickly want to compare a field value with any other value or string
 .. code-block:: php
 
     {{#if== field, "value"}} ... {{/if==}}
-	{{#if== field, otherField}} ... {{/if==}}
+    {{#if== field, otherField}} ... {{/if==}}
 
 If Not Equals
 -------------
@@ -109,7 +109,7 @@ The counterpart to ``if==`` helper is the ``if!=`` helper that lets you check fo
 .. code-block:: php
 
     {{#if!= field, "value"}} ... {{/if!=}}
-	{{#if!= field, otherField}} ... {{/if!=}}
+    {{#if!= field, otherField}} ... {{/if!=}}
 
 Record ID
 ---------
