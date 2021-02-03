@@ -48,6 +48,13 @@ class AirmadModel {
 
 
 	/**
+	 *	The reduced filter data array. Only filters that matche the filtered set of records.
+	 */
+
+	private $filteredFilterData = array();
+
+
+	/**
 	 *	The name of the ID field.
 	 */
 
@@ -65,13 +72,11 @@ class AirmadModel {
 		$this->options = $options;
 		$this->tableMap = $this->buildTableMap(Core\Parse::csv($options->linked));
 
-		$this->records = $this->filterRecords(
-			$this->prepareRecords(
-				$this->getTables()
-			)
-		);
-
+		$this->records = $this->prepareRecords($this->getTables());
 		$this->filterData = $this->extractFilterData($this->records);
+
+		$this->records = $this->filterRecords($this->records);
+		$this->filteredFilterData = $this->extractFilterData($this->records);
 
 	}
 
@@ -261,6 +266,7 @@ class AirmadModel {
 		return (object) array(
 			'records' => $this->records,
 			'filters' => $this->filterData,
+			'filteredFilters' => $this->filteredFilterData,
 			'query' => $_GET
 		);
 
