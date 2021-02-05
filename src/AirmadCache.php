@@ -60,6 +60,10 @@ class AirmadCache {
 			$this->lifeTime = AIRMAD_CACHE_LIFETIME;
 		}
 
+		if (!empty($_GET['airmad_force_sync'])) {
+			$this->lifeTime = 0;
+		}
+
 		Core\Debug::log($this->lifeTime, 'Airmad cache lifetime');
 		Core\Debug::log("{$base} > {$table} > {$view}", 'New Airmad cache instance for');
 

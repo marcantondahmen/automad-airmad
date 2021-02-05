@@ -41,3 +41,19 @@ configure the Airtable cache lifetime in seconds.
       ...
     }
 
+Disabling the Cache
+-------------------
+
+In some cases you want to be able to trigger an update of the cached tables instantly. 
+A fresh sync of the Airtable data with your Automad site can be forced by appending the ``airmad_force_sync`` parameter
+the URL of a page including an Airmad instance as follows:
+
+.. code-block:: php
+
+	https://domain.com/page?airmad_force_sync=1
+
+That also comes in handy in case you want to automate the database sync using **cron** or **bash**:
+
+.. code-block:: php
+
+	curl -s 'https://domain.com/page?airmad_force_sync=1' > /dev/null
