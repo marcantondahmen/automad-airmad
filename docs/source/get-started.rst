@@ -31,20 +31,21 @@ create one on your Airtable profile page. After successfully creating such token
 it has to be added to Automad's ``config/config.php`` file. That can be done by 
 navigating to **System Settings > More > Edit Configuration File** in the Automad 
 dashboard as demonstrated below. Aside from the authentictaion, there you can also 
-configure the Airtable cache lifetime in seconds.
+configure the Airtable cache lifetime and the model cache lifetime in seconds.
 
 .. code-block:: php
 
     {
       "AIRMAD_TOKEN": "keyXXXXXXXXXXXXXX",
       "AIRMAD_CACHE_LIFETIME": 43200,
+	  "AIRMAD_MODEL_CACHE_LIFETIME": 1800
       ...
     }
 
 Disabling the Cache
 -------------------
 
-In some cases you want to be able to trigger an update of the cached tables instantly. 
+In some cases you want to be able to trigger an update of the cached tables and models instantly. 
 A fresh sync of the Airtable data with your Automad site can be forced by appending the ``airmad_force_sync`` parameter
 the URL of a page including an Airmad instance as follows:
 

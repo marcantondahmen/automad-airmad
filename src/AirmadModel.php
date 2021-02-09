@@ -70,10 +70,25 @@ class AirmadModel {
 	public function __construct($options) {
 
 		$this->options = $options;
-		$this->tableMap = $this->buildTableMap(Core\Parse::csv($options->linked));
+		
+		$cache = new AirmadModelCache($options);
 
-		$this->records = $this->prepareRecords($this->getTables());
-		$this->filterData = $this->extractFilterData($this->records);
+		if ($data = $cache->load()) {
+
+			$this->records = $data->records;
+			$this->filterData = $data->filterData;
+
+		} else {
+
+			$this->tableMap = $this->buildTableMap(Core\Parse::csv($options->linked));
+
+			$this->records = $this->prepareRecords($this->getTables());
+			$this->filterData = $this->extractFilterData($this->records);
+
+			$data = (object) array('records' => $this->records, 'filterData' => $this->filterData);
+			$cache->save($data);
+
+		}
 
 		$this->records = $this->filterRecords($this->records);
 		$this->filteredFilterData = $this->extractFilterData($this->records);

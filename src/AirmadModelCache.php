@@ -9,27 +9,28 @@
  *	@license MIT license
  */
 
+
 namespace Airmad;
 use Automad\Core;
+
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
 
-class AirmadCache {
+class AirmadModelCache {
 
-	
+
 	/**
 	 *	The cache directory.
 	 */
 
-	private $cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airmad/tables';
-
+	private $cacheDir = AM_BASE_DIR . AM_DIR_CACHE . '/airmad/models';
 
 	/**
 	 *	The cache lifetime.
 	 */
 
-	private $lifeTime = 43200;
+	private $lifeTime = 1800;
 
 
 	/**
@@ -47,27 +48,25 @@ class AirmadCache {
 
 
 	/**
-	 *	The cache constructor. An instance identifies a cache file by a hash of base/table/view.
+	 *	The model cache constructor.
 	 *
-	 *	@param array $base
-	 *	@param array $table
-	 *	@param array $view
+	 *	@param array $options
 	 */
 
-	public function __construct($base, $table, $view) {
+	public function __construct($options) {
 
-		if (defined('AIRMAD_CACHE_LIFETIME')) {
-			$this->lifeTime = AIRMAD_CACHE_LIFETIME;
+		if (defined('AIRMAD_MODEL_CACHE_LIFETIME')) {
+			$this->lifeTime = AIRMAD_MODEL_CACHE_LIFETIME;
 		}
 
 		if (!empty($_GET['airmad_force_sync'])) {
 			$this->lifeTime = 0;
 		}
 
-		Core\Debug::log($this->lifeTime, 'Airmad cache lifetime');
-		Core\Debug::log("{$base} > {$table} > {$view}", 'New Airmad cache instance for');
+		Core\Debug::log($this->lifeTime, 'Airmad model cache lifetime');
+		Core\Debug::log($options, 'New Airmad model cache instance for');
 
-		$hash = sha1("{$base}/{$table}/{$view}");
+		$hash = sha1("{$options->base}/{$options->table}/{$options->view}/{$options->linked}/{$options->filters}");
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
 		Core\FileSystem::makeDir($this->cacheDir);
 
@@ -87,9 +86,9 @@ class AirmadCache {
 
 
 	/**
-	 *	Loads a the cached table records from the cache.
+	 *	Loads a the cached data from the cache.
 	 *
-	 *	@return array The unserialized tables array
+	 *	@return array The unserialized data array
 	 */
 
 	public function load() {
@@ -98,22 +97,22 @@ class AirmadCache {
 			return false;
 		}
 
-		Core\Debug::log('Loading data from cache');
+		Core\Debug::log('Loading model data from cache');
 		return unserialize(file_get_contents($this->cacheFile));
 
 	}
 
 
 	/**
-	 *	Saves the serialized table records array to the cache. 
+	 *	Saves the serialized data array to the cache. 
 	 *
-	 *	@param array $records
+	 *	@param array $data
 	 */
 
-	public function save($records) {
+	public function save($data) {
 
-		Core\Debug::log('Saving data to cache');
-		Core\FileSystem::write($this->cacheFile, serialize($records));
+		Core\Debug::log('Saving model data to cache');
+		Core\FileSystem::write($this->cacheFile, serialize($data));
 
 	}
 
