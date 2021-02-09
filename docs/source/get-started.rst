@@ -38,7 +38,7 @@ configure the Airtable cache lifetime and the model cache lifetime in seconds.
     {
       "AIRMAD_TOKEN": "keyXXXXXXXXXXXXXX",
       "AIRMAD_CACHE_LIFETIME": 43200,
-	  "AIRMAD_MODEL_CACHE_LIFETIME": 1800
+      "AIRMAD_MODEL_CACHE_LIFETIME": 1800
       ...
     }
 
