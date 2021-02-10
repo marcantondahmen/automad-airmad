@@ -30,7 +30,7 @@ class AirmadModelCache {
 	 *	The cache lifetime.
 	 */
 
-	private $lifeTime = 1800;
+	private $lifeTime = 7200;
 
 
 	/**
@@ -55,8 +55,8 @@ class AirmadModelCache {
 
 	public function __construct($options) {
 
-		if (defined('AIRMAD_MODEL_CACHE_LIFETIME')) {
-			$this->lifeTime = AIRMAD_MODEL_CACHE_LIFETIME;
+		if (defined('AIRMAD_CACHE_LIFETIME')) {
+			$this->lifeTime = AIRMAD_CACHE_LIFETIME;
 		}
 
 		if (!empty($_GET['airmad_force_sync'])) {
