@@ -29,7 +29,7 @@ class AirmadCache {
 	 *	The cache lifetime.
 	 */
 
-	private $lifeTime = 43200;
+	private $lifeTime = 7200;
 
 
 	/**
