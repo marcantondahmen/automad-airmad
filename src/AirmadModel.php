@@ -161,6 +161,7 @@ class AirmadModel {
 			foreach ($filters as $filter => $value) {
 
 				$data = '';
+				$value = str_replace('-', '_', Core\Str::sanitize($value));
 
 				if (!empty($record->fields->$filter)) {
 
@@ -177,7 +178,7 @@ class AirmadModel {
 						$data = preg_replace('/"[^"]+"\:/', '', $data);
 
 						// Remove special chars.
-						$data = preg_replace('/[,"\{\}\[\]]+/', ' ', $data);
+						$data = str_replace('-', '_', Core\Str::sanitize($data));
 
 					}
 					
