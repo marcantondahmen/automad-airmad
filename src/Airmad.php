@@ -11,6 +11,7 @@
 
 namespace Airmad;
 use Handlebars\Handlebars;
+use Handlebars\Loader\FilesystemLoader;
 use Automad\Core;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
@@ -55,6 +56,7 @@ class Airmad {
 			'view' => false,
 			'linked' => false,
 			'template' => false,
+			'partials' => false,
 			'filters' => false,
 			'limit' => 20,
 			'page' => 1,
@@ -142,7 +144,15 @@ class Airmad {
 
 	private function render() {
 
-		$handlebars = new Handlebars(array('enableDataVariables' => true));
+		$settings = array('enableDataVariables' => true);
+
+		if (!empty($this->options->partials)) {
+			$partialsDir = AM_BASE_DIR . $this->options->partials;
+			$partialsLoader = new FilesystemLoader($partialsDir, array('extension' => 'handlebars'));
+			$settings['partials_loader'] = $partialsLoader;
+		}
+
+		$handlebars = new Handlebars($settings);
 
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
 			return AirmadSlider::render($template, $context, $args, 'large');
