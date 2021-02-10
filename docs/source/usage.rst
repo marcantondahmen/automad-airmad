@@ -5,7 +5,7 @@ Airmad can either be used in template files as part of a theme or, as recommende
 in a snippet block. The latter one allows for integrating Airmad into any existing 
 theme that supports Automad's block editor. The markup looks as follows:
 
-.. attention::
+.. note::
 
     You can simply paste an Airmad snippet directly into a code field of the new 
     **Template Snippet** block on any page in the Automad dashboard. 
@@ -34,6 +34,7 @@ theme that supports Automad's block editor. The markup looks as follows:
                 {{/fields}}
             {{/records}}
         ',
+        partials: '/packages/some/partials',
         limit: 20,
         page: @{ ?Page | def(1) }
     } @>
@@ -52,7 +53,7 @@ template for example as follows.
         @{ :exampleOutput }
     </div>
 
-.. attention:: 
+.. note:: 
 
     In case you want to use multiple Airmad instances on your **site**, you will have to 
     define **unique prefixes** for each one in order to avoid conflicts between them. 
@@ -81,6 +82,10 @@ Name            Description
 ``template``    The Handlebar template to be used to render the model 
                 (the collection of records) --- 
                 can be either a string, a variable containing a string or a file path
+``partials``    You can optionally specify a path to a directory containing partials. That path must be
+                an absolute path in relation to your Automad installation directory, like 
+                for example ``/packages/extension/partials``. Note that partial files **must** have 
+                the ``.handlebars`` extension in order to be loaded.
 ``filters``     A comma separated list of fields that can be used to filter the records by --- 
                 check out the examples below for more information about :doc:`filtering <filters>`
 ``limit``       The maximum number of records to be displayed on a page
@@ -105,7 +110,7 @@ Name                Description
 ``:prefixMemory``   The max memory used by Automad in bytes
 ==================  ===============
 
-.. attention::
+.. note::
 
     Note that you **must** define an unique prefix to be used instead of ``:prefix*`` in the 
     Airmad `options <#options>`_ when creating a new instance.

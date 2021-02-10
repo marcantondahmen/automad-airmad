@@ -7,7 +7,7 @@ and building a pagination navigation. To allow for quick testing, the base for t
 Therefore it should be easy to just copy and paste the code --- by replacing the app ID of course --- 
 after setting up authentication. 
 
-.. attention::
+.. note::
 
     Make sure that you already have added the **AIRMAD_TOKEN** to your configuration as described 
     in the **Get Stared** guide. And don't forget to replace the base ID in the snippet below with

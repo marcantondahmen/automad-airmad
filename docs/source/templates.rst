@@ -58,7 +58,7 @@ To access a parameter in a **query string** like for example ``https://domain.co
 
     {{query.parameter}}
 
-.. attention::
+.. note::
 
     Airtable provides some example bases when setting up an account. The Airmad repository includes some 
     example snipptes that are made to work with the **Project tracker** example base of Airtable. 
@@ -211,3 +211,14 @@ Aside from the examples above, Handlebars offers even more helpers that can be u
 such as ``with``, ``if``, ``unless`` and others. 
 You can find the `documentation <https://github.com/salesforce/handlebars-php#control-structures>`_ 
 of those features as well on GitHub. 
+
+Partials
+--------
+
+In order to use Handlebars partials, you have to define an absolute path in relation to your Automad directory 
+as the value for the ``partials`` parameter when creating a new Airmad instance. All ``*.handlbars`` files in that 
+directory can be used as partials as follows: 
+
+.. code-block:: php
+
+    {{> myPartial }}
