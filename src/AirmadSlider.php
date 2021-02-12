@@ -46,13 +46,17 @@ class AirmadSlider {
 				
 				foreach ($images as $image) {
 					
-					$url = $image->thumbnails->$var->url;
+					if (!empty($image->thumbnails) && !empty($image->thumbnails->$var) && !empty($image->thumbnails->$var->url)) {
 
-					$slider .= <<< HTML
-								<div class="airmad-slider-item $var">
-									<img src="$url">
-								</div>	
+						$url = $image->thumbnails->$var->url;
+
+						$slider .= <<< HTML
+									<div class="airmad-slider-item $var">
+										<img src="$url">
+									</div>	
 HTML;
+
+					}
 
 				}
 
