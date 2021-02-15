@@ -91,6 +91,15 @@ It is also possible to get the original image in a slider as follows:
 
     {{#sliderLarge images 75%}}
 
+Sanitize Values 
+---------------
+
+In order to use values in a query string, it is good practice to sanitize those before as follows:
+
+.. code-block:: php
+
+    {{#sanitize field}}
+
 If Equals
 ---------
 
@@ -101,6 +110,13 @@ In case you quickly want to compare a field value with any other value or string
     {{#if== field, "value"}} ... {{/if==}}
     {{#if== field, otherField}} ... {{/if==}}
 
+Note that it might sometimes be required to compare **sanitized** values. This can be done as follows as well:
+
+.. code-block:: php
+
+    {{#ifsan== field, "value"}} ... {{/ifsan==}}
+    {{#ifsan== field, query.field}} ... {{/ifsan==}}
+
 If Not Equals
 -------------
 
@@ -110,6 +126,13 @@ The counterpart to ``if==`` helper is the ``if!=`` helper that lets you check fo
 
     {{#if!= field, "value"}} ... {{/if!=}}
     {{#if!= field, otherField}} ... {{/if!=}}
+
+To compare sanitized values, please use:
+
+.. code-block:: php
+
+    {{#ifsan!= field, "value"}} ... {{/ifsan!=}}
+    {{#ifsan!= field, query.field}} ... {{/ifsan!=}}
 
 Record ID
 ---------
