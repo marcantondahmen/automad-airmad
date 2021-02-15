@@ -161,7 +161,7 @@ class AirmadModel {
 			foreach ($filters as $filter => $value) {
 
 				$data = '';
-				$value = str_replace('-', '_', Core\Str::sanitize($value));
+				$value = preg_quote(Core\Str::sanitize(htmlspecialchars_decode($value)));
 
 				if (!empty($record->fields->$filter)) {
 
@@ -177,10 +177,9 @@ class AirmadModel {
 						// Remove keys from JSON.
 						$data = preg_replace('/"[^"]+"\:/', '', $data);
 
-						// Remove special chars.
-						$data = str_replace('-', '_', Core\Str::sanitize($data));
-
 					}
+
+					$data = Core\Str::sanitize($data);
 					
 				}
 
