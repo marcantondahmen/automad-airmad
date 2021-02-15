@@ -182,12 +182,44 @@ class Airmad {
 
 		});	
 
+		$handlebars->addHelper('ifsan==', function($template, $context, $args, $source) {
+
+			$argsArray = $this->resolveCsvArgs($args, $context);
+
+			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
+				if (Core\Str::sanitize($argsArray[0]) == Core\Str::sanitize($argsArray[1])) {
+					$buffer = $template->render($context);
+					$template->discard();
+					return $buffer;
+				}
+			}
+
+			return false;
+
+		});	
+
 		$handlebars->addHelper('if!=', function($template, $context, $args, $source) {
 
 			$argsArray = $this->resolveCsvArgs($args, $context);
 
 			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
 				if ($argsArray[0] != $argsArray[1]) {
+					$buffer = $template->render($context);
+					$template->discard();
+					return $buffer;
+				}
+			}
+
+			return false;
+
+		});	
+
+		$handlebars->addHelper('ifsan!=', function($template, $context, $args, $source) {
+
+			$argsArray = $this->resolveCsvArgs($args, $context);
+
+			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
+				if (Core\Str::sanitize($argsArray[0]) != Core\Str::sanitize($argsArray[1])) {
 					$buffer = $template->render($context);
 					$template->discard();
 					return $buffer;
