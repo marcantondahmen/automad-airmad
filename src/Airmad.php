@@ -154,6 +154,10 @@ class Airmad {
 
 		$handlebars = new Handlebars($settings);
 
+		$handlebars->addHelper('sanitize', function($template, $context, $args, $source) {
+			return Core\Str::sanitize($context->get($args));
+		});
+
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
 			return AirmadSlider::render($template, $context, $args, 'large');
 		});
