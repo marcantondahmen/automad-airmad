@@ -10,7 +10,7 @@ using Airtable's REST API. To speed things up and align them with the user exper
 of a small and lightweight Automad site, all retrieved recordes are cached on your server. 
 Updated data is pulled from time to time. 
 
-.. note::
+.. attention::
 
     Airmad requires your webserver to run **PHP 7+** in order to work properly!
 

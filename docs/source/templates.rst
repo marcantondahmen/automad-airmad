@@ -58,7 +58,7 @@ To access a parameter in a **query string** like for example ``https://domain.co
 
     {{query.parameter}}
 
-.. note::
+.. attention::
 
     Airtable provides some example bases when setting up an account. The Airmad repository includes some 
     example snipptes that are made to work with the **Project tracker** example base of Airtable. 

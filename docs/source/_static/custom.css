@@ -12,18 +12,10 @@ html.landing .rst-content h1 {
 	font-weight: 580;
 }
 
-.landing .buttons.container .reference:first-child {
-	padding: 0 1.3rem !important;
-	line-height: 2.4 !important;
-	color: #ffffff;
-	background-color: #181818;
-	border-color: #181818;
-}
-
-.landing .buttons.container .reference:first-child:hover {
-	color: #ffffff;
-	background-color: #262626;
-	border-color: #262626;
+.landing .buttons.container .reference:first-child:not(:hover) {
+	color: #181818;
+	background-color: #fffc52;
+	border-color: #fffc52;
 }
 
 .admonition > .admonition-title {
@@ -31,5 +23,5 @@ html.landing .rst-content h1 {
 }
 
 .highlight .hll {
-	background-color: #f0f0f0 !important;
+	background-color: #fffc52 !important;
 }

@@ -5,7 +5,7 @@ Airmad can either be used in template files as part of a theme or, as recommende
 in a snippet block. The latter one allows for integrating Airmad into any existing 
 theme that supports Automad's block editor. The markup looks as follows:
 
-.. note::
+.. attention::
 
     You can simply paste an Airmad snippet directly into a code field of the new 
     **Template Snippet** block on any page in the Automad dashboard. 
@@ -53,7 +53,7 @@ template for example as follows.
         @{ :exampleOutput }
     </div>
 
-.. note:: 
+.. attention:: 
 
     In case you want to use multiple Airmad instances on your **site**, you will have to 
     define **unique prefixes** for each one in order to avoid conflicts between them. 
@@ -110,7 +110,7 @@ Name                Description
 ``:prefixMemory``   The max memory used by Automad in bytes
 ==================  ===============
 
-.. note::
+.. attention::
 
     Note that you **must** define an unique prefix to be used instead of ``:prefix*`` in the 
     Airmad `options <#options>`_ when creating a new instance.
