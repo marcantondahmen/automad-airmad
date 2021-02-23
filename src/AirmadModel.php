@@ -169,7 +169,7 @@ class AirmadModel {
 
 					if (is_array($data)) {
 
-						$data = json_encode($data);
+						$data = json_encode($data, JSON_UNESCAPED_UNICODE);
 
 						// Remove linked IDs from JSON string to not confuse filters.
 						$data = preg_replace('/\[("rec\w{14,20}",?)+\]/', '', $data);
