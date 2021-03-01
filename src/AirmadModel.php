@@ -161,7 +161,7 @@ class AirmadModel {
 			foreach ($filters as $filter => $value) {
 
 				$data = '';
-				$value = preg_quote(Core\Str::sanitize(htmlspecialchars_decode($value)));
+				$value = preg_quote(Core\Str::sanitize(htmlspecialchars_decode($value), false, 1000));
 
 				if (!empty($record->fields->$filter)) {
 
@@ -179,7 +179,7 @@ class AirmadModel {
 
 					}
 
-					$data = Core\Str::sanitize($data);
+					$data = Core\Str::sanitize($data, false, 100000);
 					
 				}
 
