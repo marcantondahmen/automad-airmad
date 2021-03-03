@@ -154,6 +154,10 @@ class Airmad {
 
 		$handlebars = new Handlebars($settings);
 
+		$handlebars->addHelper('json', function($template, $context, $args, $source) {
+			return json_encode($context->get($args));
+		});
+
 		$handlebars->addHelper('sanitize', function($template, $context, $args, $source) {
 			return Core\Str::sanitize($context->get($args));
 		});
