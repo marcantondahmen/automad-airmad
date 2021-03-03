@@ -235,6 +235,22 @@ such as ``with``, ``if``, ``unless`` and others.
 You can find the `documentation <https://github.com/salesforce/handlebars-php#control-structures>`_ 
 of those features as well on GitHub. 
 
+JSON Output 
+-----------
+
+To get the actual context data instead of a rendered HTML output, you can render JSON output instead. To get 
+all data simply use this as your template:
+
+.. code-block:: php
+
+    {{#json this}}
+
+To just get the records for example, you can use:
+
+.. code-block:: php
+
+    {{#json records}}
+
 Partials
 --------
 
