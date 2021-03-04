@@ -159,7 +159,7 @@ class Airmad {
 		});
 
 		$handlebars->addHelper('sanitize', function($template, $context, $args, $source) {
-			return Core\Str::sanitize($context->get($args));
+			return AirmadUtils::sanitize($context->get($args));
 		});
 
 		$handlebars->addHelper('slider', function($template, $context, $args, $source) {
@@ -191,7 +191,7 @@ class Airmad {
 			$argsArray = $this->resolveCsvArgs($args, $context);
 
 			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if (Core\Str::sanitize($argsArray[0]) == Core\Str::sanitize($argsArray[1])) {
+				if (AirmadUtils::sanitize($argsArray[0], true) == AirmadUtils::sanitize($argsArray[1], true)) {
 					$buffer = $template->render($context);
 					$template->discard();
 					return $buffer;
@@ -223,7 +223,7 @@ class Airmad {
 			$argsArray = $this->resolveCsvArgs($args, $context);
 
 			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if (Core\Str::sanitize($argsArray[0]) != Core\Str::sanitize($argsArray[1])) {
+				if (AirmadUtils::sanitize($argsArray[0], true) != AirmadUtils::sanitize($argsArray[1], true)) {
 					$buffer = $template->render($context);
 					$template->discard();
 					return $buffer;

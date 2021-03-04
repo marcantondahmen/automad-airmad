@@ -161,29 +161,18 @@ class AirmadModel {
 			foreach ($filters as $filter => $value) {
 
 				$data = '';
-				$value = preg_quote(Core\Str::sanitize(htmlspecialchars_decode($value), false, 1000));
+				$value = AirmadUtils::sanitize(htmlspecialchars_decode($value));
 
 				if (!empty($record->fields->$filter)) {
-
 					$data = $record->fields->$filter;
-
-					if (is_array($data)) {
-
-						$data = json_encode($data, JSON_UNESCAPED_UNICODE);
-
-						// Remove linked IDs from JSON string to not confuse filters.
-						$data = preg_replace('/\[("rec\w{14,20}",?)+\]/', '', $data);
-
-						// Remove keys from JSON.
-						$data = preg_replace('/"[^"]+"\:/', '', $data);
-
-					}
-
-					$data = Core\Str::sanitize($data, false, 100000);
-					
+					$data = json_encode($data, JSON_UNESCAPED_UNICODE);
+					// Remove keys from JSON.
+					$data = preg_replace('/"[^"]+"\:/', '', $data);
+					$data = AirmadUtils::sanitize($data);
 				}
 
 				if ($data) {
+					$value = preg_quote($value);
 					$match = preg_match("/$value/is", $data);
 				} else {
 					$match = false;

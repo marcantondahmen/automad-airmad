@@ -41,6 +41,27 @@ with the names ``Category`` and ``Client``. The Airmad instance below that form 
 can see in the highlighted line. Note that since in this example **Client** is a linked table, defining the ``linked`` parameter
 allows for searching in linked records as well.
 
+Exact Matches 
+-------------
+
+By default, all items with a field that contain the filter string are included in the list of matched records. However in case 
+you prefer to only include exact matches where the filter string equals the actual field value or one of the field values, 
+the filter value has to be wrapped in double quotes.
+
+So basically a query string like 
+
+.. code-block:: php
+
+    https://domain.com?name=value 
+
+has to be changed to 
+
+.. code-block:: php
+
+    https://domain.com?name="value" 
+
+to only match records with a ``name`` that is equals ``value``.
+
 Autocompletion
 --------------
 
