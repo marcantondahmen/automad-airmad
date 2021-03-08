@@ -271,7 +271,9 @@ class AirmadModel {
 			'records' => $this->records,
 			'filters' => $this->filterData,
 			'filteredFilters' => $this->filteredFilterData,
-			'query' => $_GET
+			'query' => $_GET,
+			'count' => count($this->records),
+			'pages' => ceil(count($this->records) / $this->options->limit)
 		);
 
 	}
