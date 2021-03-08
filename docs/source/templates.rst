@@ -39,6 +39,8 @@ Name					Description
 ``filteredFilters``     The **filteredFilters** reprensent a relevant and unique collection of items 
                         of columns specified in the filters option that match the actual set of records 
 ``query``               The query element contains all parameters of the query string 
+``count``               The count of records in filtered the model 
+``pages``               The number of pages needed to display all records in the model 
 ======================	===============================================================================
 
 In a template you can therefore iterate all records using the **Handlebars** syntax as demonstarted below.
