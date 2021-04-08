@@ -18,6 +18,7 @@ theme that supports Automad's block editor. The markup looks as follows:
         table: 'Design projects',
         view: 'All projects',
         filters: 'Client, Category',
+        formula: 'SEARCH(LOWER("@{ ?search }"), LOWER({Name}))',
         linked: 'Client => Clients',
         prefix: ':example',
         template: '
@@ -88,6 +89,8 @@ Name            Description
                 the ``.handlebars`` extension in order to be loaded.
 ``filters``     A comma separated list of fields that can be used to filter the records by --- 
                 check out the examples below for more information about :doc:`filtering <filters>`
+``formula``     A `formula <https://support.airtable.com/hc/en-us/articles/203255215-Formula-Field-Reference>`_ 
+                to be used to for the ``filterByFormula`` parameter when making API requests.
 ``limit``       The maximum number of records to be displayed on a page
 ``page``        The current page of records (pagination)
 ==============  ====================================================================================
@@ -115,3 +118,33 @@ Name                Description
     Note that you **must** define an unique prefix to be used instead of ``:prefix*`` in the 
     Airmad `options <#options>`_ when creating a new instance.
 
+Filters and Formula
+-------------------
+
+Airmad offers two ways of searching an Airtable base --- filters and formulas. 
+While filters are very easy to use and allow for automatic filtering of records whenever there is a query string 
+parameter with a column name present, formulas are way more flexible and powerful. In contrast to  filters, 
+formulas allow for searching across multiple fields by a custom formula. Take a look at the official formula 
+`documentation <https://support.airtable.com/hc/en-us/articles/203255215-Formula-Field-Reference>`_ provided 
+by Airtable for a full list of available options and examples.
+
+.. code-block:: php
+   :emphasize-lines: 5
+
+    <@ Airmad/Airmad {
+        base: 'appXXXXXXXXXXXXXX',
+        table: 'Design projects',
+        view: 'All projects',
+        formula: 'SEARCH(LOWER("@{ ?search }"), LOWER(CONCATENATE({Name}, {Client})))',
+        prefix: ':example',
+        template: '
+            {{#records}}
+                {{#fields}}
+                    <h3>{{Name}}</h3>
+                {{/fields}}
+            {{/records}}
+        '
+    } @>
+
+The example above will demonstrates how you can implement searching the ``Name`` and the ``Client`` fields of records
+at the same time by only a single search parameter in the query string. 
