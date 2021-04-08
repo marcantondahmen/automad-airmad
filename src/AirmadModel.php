@@ -201,7 +201,11 @@ class AirmadModel {
 
 		$tables = array();
 		$AirmadAPI = new AirmadAPI($this->options);
-		$tables[$this->options->table] = $AirmadAPI->getRecords($this->options->table, $this->options->view);
+		$tables[$this->options->table] = $AirmadAPI->getRecords(
+											$this->options->table, 
+											$this->options->view, 
+											$this->options->formula
+										 );
 		
 		foreach (array_values($this->tableMap) as $tableName) {
 			$tables[$tableName] = $AirmadAPI->getRecords($tableName);

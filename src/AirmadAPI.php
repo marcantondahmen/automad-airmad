@@ -62,11 +62,12 @@ class AirmadAPI {
 	 *
 	 *	@param string $table
 	 *	@param string $view
+	 *	@param string $formula
 	 */
 
-	public function getRecords($table, $view = false) {
+	public function getRecords($table, $view = false, $formula = false) {
 
-		$cache = new AirmadCache($this->options->base, $table, $view);
+		$cache = new AirmadCache($this->options->base, $table, $view, $formula);
 
 		if ($records = $cache->load()) {
 			return $records;
@@ -79,7 +80,8 @@ class AirmadAPI {
 		$query = array(
 			'maxRecords' => 100000,
 			'pageSize' => 100,
-			'view' => $view
+			'view' => $view,
+			'filterByFormula' => $formula
 		);
 
 		$query = array_filter($query);

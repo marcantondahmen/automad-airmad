@@ -67,7 +67,7 @@ class AirmadModelCache {
 		Core\Debug::log($options, 'New Airmad model cache instance for');
 
 		$filtersJson = json_encode($options->filters);
-		$hash = sha1("{$options->base}/{$options->table}/{$options->view}/{$options->linked}/{$filtersJson}");
+		$hash = sha1("{$options->base}/{$options->table}/{$options->view}/{$options->linked}/{$filtersJson}/{$options->formula}");
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
 		Core\FileSystem::makeDir($this->cacheDir);
 

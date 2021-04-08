@@ -52,9 +52,10 @@ class AirmadCache {
 	 *	@param array $base
 	 *	@param array $table
 	 *	@param array $view
+	 *	@param array $formula
 	 */
 
-	public function __construct($base, $table, $view) {
+	public function __construct($base, $table, $view, $formula) {
 
 		if (defined('AIRMAD_CACHE_LIFETIME')) {
 			$this->lifeTime = AIRMAD_CACHE_LIFETIME;
@@ -65,9 +66,9 @@ class AirmadCache {
 		}
 
 		Core\Debug::log($this->lifeTime, 'Airmad cache lifetime');
-		Core\Debug::log("{$base} > {$table} > {$view}", 'New Airmad cache instance for');
+		Core\Debug::log("{$base} > {$table} > {$view} > {$formula}", 'New Airmad cache instance for');
 
-		$hash = sha1("{$base}/{$table}/{$view}");
+		$hash = sha1("{$base}/{$table}/{$view}/{$formula}");
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
 		Core\FileSystem::makeDir($this->cacheDir);
 

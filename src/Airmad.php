@@ -58,6 +58,7 @@ class Airmad {
 			'template' => false,
 			'partials' => false,
 			'filters' => false,
+			'formula' => false,
 			'limit' => 20,
 			'page' => 1,
 			'prefix' => false
