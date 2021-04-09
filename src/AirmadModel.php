@@ -27,6 +27,13 @@ class AirmadModel {
 
 
 	/**
+	 *	The Automad data bridge object.
+	 */
+
+	private $AutomadDataBridge;
+
+
+	/**
 	 *	The table map array (field => table).
 	 */	
 
@@ -65,9 +72,10 @@ class AirmadModel {
 	 *	The constructor.
 	 *
 	 *	@param object $options
+	 *	@param object $Automad
 	 */
 
-	public function __construct($options) {
+	public function __construct($options, $Automad) {
 
 		$this->options = $options;
 		
@@ -92,6 +100,7 @@ class AirmadModel {
 
 		$this->records = $this->filterRecords($this->records);
 		$this->filteredFilterData = $this->extractFilterData($this->records);
+		$this->AutomadDataBridge = new AutomadDataBridge($Automad);
 
 	}
 
@@ -277,7 +286,8 @@ class AirmadModel {
 			'filteredFilters' => $this->filteredFilterData,
 			'query' => $_GET,
 			'count' => count($this->records),
-			'pages' => ceil(count($this->records) / $this->options->limit)
+			'pages' => ceil(count($this->records) / $this->options->limit),
+			'automad' => $this->AutomadDataBridge->get()
 		);
 
 	}

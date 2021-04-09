@@ -81,7 +81,7 @@ class Airmad {
 			return 'Please provide a value for the <code>prefix</code> parameter!';
 		}
 
-		$AirmadModel = new AirmadModel($this->options); 
+		$AirmadModel = new AirmadModel($this->options, $Automad); 
 		$this->model = $AirmadModel->get();
 		$AirmadModel = NULL;
 
