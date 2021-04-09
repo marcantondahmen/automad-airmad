@@ -3,7 +3,7 @@
  *
  *	An Airtable integration for Automad.
  *
- *	Copyright (C) 2020 Marc Anton Dahmen - <https://marcdahmen.de>
+ *	Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
  *	MIT license
  */.airmad-slider{position:relative;padding-top:var(--airmad-slider-padding-top,100%)}.airmad-slider-item{position:absolute;top:0;left:0;width:100%;height:0;padding-top:var(--airmad-slider-padding-top,100%);opacity:0;pointer-events:none;cursor:default;transition:opacity .2s .2s ease-in}.airmad-slider-item.active{visibility:visible;opacity:1;pointer-events:initial;transition:opacity .2s 0s ease-in}.airmad-slider-item>img{position:absolute;-o-object-fit:cover;object-fit:cover;width:100%;height:100%;
 top:0}.airmad-slider-item>img:hover{transform:scale(1)!important}.airmad-slider-next,.airmad-slider-prev{position:absolute;text-decoration:none;top:50%;transform:translate(0,-50%);width:3.5rem;line-height:3.5rem;font-size:3rem;text-align:center;font-family:am-controls;color:var(--am-slider-controls-color);background-color:var(--am-slider-controls-background);opacity:0;transition:opacity .2s ease-in}.airmad-slider:hover .airmad-slider-next,.airmad-slider:hover .airmad-slider-prev{opacity:.1}

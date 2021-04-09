@@ -15,4 +15,4 @@ Take a look at the full Airmad [documentation](https://airmad.readthedocs.io) fo
 
 ---
 
-&copy; 2020 [Marc Anton Dahmen](https://marcdahmen.de) &mdash; MIT license
+&copy; 2020-2021 [Marc Anton Dahmen](https://marcdahmen.de) &mdash; MIT license

@@ -3,7 +3,7 @@
  *
  *	An Airtable integration for Automad.
  *
- *	Copyright (C) 2020 Marc Anton Dahmen - <https://marcdahmen.de>
+ *	Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
  *	MIT license
  */
 
