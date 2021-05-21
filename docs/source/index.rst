@@ -11,7 +11,8 @@ Airmad
 
 .. container:: .buttons
 
-   `Get Started ⟶ <get-started.html>`_
+   `Docs <get-started.html>`_
+   `GitHub <https://github.com/marcantondahmen/automad-airmad>`_
 
 .. toctree::
    :hidden:

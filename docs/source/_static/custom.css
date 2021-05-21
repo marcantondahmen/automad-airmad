@@ -1,27 +1,36 @@
-html.landing .rst-content h1 {
-	font-size: 3.25rem !important;
-	font-weight: 780 !important;
-}
+:root {
 
-.wy-menu-vertical {
-	padding-top: 0 !important;
-}
+	--hue: 215;
+	--sat: 6%;
+	
+	--bg: hsl(var(--hue), var(--sat), 100%);
+	--bg-nav: var(--bg);
+	--bg-nav-current: hsl(var(--hue), var(--sat), 22%);
+	--bg-nav-current-list: hsl(var(--hue), var(--sat), 96.5%);
+	--bg-nav-hover: hsl(var(--hue), var(--sat), 94%);
+	--bg-code: hsl(var(--hue), var(--sat), 96.5%);
+	--bg-code-highlight: hsl(var(--hue), var(--sat), 93%);
+	--bg-panel: var(--bg-code);
 
-.landing .buttons.container .reference {
-	font-size: 1.5rem;
-	font-weight: 580;
-}
+	--text: hsl(var(--hue), var(--sat), 22%);
+	--link: inherit;
+	--nav: var(--text);
+	--nav-current: var(--bg);
+	--code: hsl(var(--hue), var(--sat), 26%);
+	--headline: var(--text);
+	
+	--border: hsl(var(--hue), var(--sat), 89%);
+	--muted: hsl(var(--hue), var(--sat), 72%);
+	--info-text: var(--bg);
+	--info-bg: hsl(var(--hue), var(--sat), 22%);
+	--danger-text: hsl(6, 80%, 97%);
+	--danger-bg: hsl(6, 82%, 62%);
+	--warning-text: hsl(59, 50%, 21%);
+	--warning-bg: hsl(59, 92%, 72%);
+	
+	--bg-highlight: #fff9a3;
 
-.landing .buttons.container .reference:first-child:not(:hover) {
-	color: #181818;
-	background-color: #fffc52;
-	border-color: #fffc52;
-}
+	--font-weight-factor: 1.12;
 
-.admonition > .admonition-title {
-	display: none;
 }
-
-.highlight .hll {
-	background-color: #fffc52 !important;
-}
+	
