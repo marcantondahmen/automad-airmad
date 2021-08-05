@@ -14,6 +14,7 @@ namespace Airmad;
 use Handlebars\Handlebars;
 use Handlebars\Loader\FilesystemLoader;
 use Automad\Core;
+use Automad\Core\Str;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
@@ -116,6 +117,10 @@ class Airmad {
 
 		$handlebars->addHelper('json', function ($template, $context, $args, $source) {
 			return json_encode($context->get($args));
+		});
+
+		$handlebars->addHelper('markdown', function ($template, $context, $args, $source) {
+			return Str::markdown($context->get($args));
 		});
 
 		$handlebars->addHelper('sanitize', function ($template, $context, $args, $source) {
