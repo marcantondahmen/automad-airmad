@@ -38,7 +38,7 @@ class Airmad {
 	public function Airmad($options, $Automad) {
 		$hash = sha1(json_encode($options));
 
-		if (AirmadRuntime::isRegistered($hash)) {
+		if (Runtime::isRegistered($hash)) {
 			return false;
 		}
 
@@ -73,9 +73,9 @@ class Airmad {
 			return 'Please provide a value for the <code>prefix</code> parameter!';
 		}
 
-		$AirmadModel = new AirmadModel($this->options, $Automad);
-		$this->model = $AirmadModel->get();
-		$AirmadModel = null;
+		$Model = new Model($this->options, $Automad);
+		$this->model = $Model->get();
+		$Model = null;
 
 		Core\Debug::log($this->model, 'Model');
 
@@ -95,7 +95,7 @@ class Airmad {
 			"{$this->options->prefix}Pages" => ceil($count / $this->options->limit)
 		));
 
-		AirmadRuntime::register($hash);
+		Runtime::register($hash);
 	}
 
 	/**
@@ -119,15 +119,15 @@ class Airmad {
 		});
 
 		$handlebars->addHelper('sanitize', function ($template, $context, $args, $source) {
-			return AirmadUtils::sanitize($context->get($args));
+			return Utils::sanitize($context->get($args));
 		});
 
 		$handlebars->addHelper('slider', function ($template, $context, $args, $source) {
-			return AirmadSlider::render($template, $context, $args, 'large');
+			return Slider::render($template, $context, $args, 'large');
 		});
 
 		$handlebars->addHelper('sliderLarge', function ($template, $context, $args, $source) {
-			return AirmadSlider::render($template, $context, $args, 'full');
+			return Slider::render($template, $context, $args, 'full');
 		});
 
 		$handlebars->addHelper('if==', function ($template, $context, $args, $source) {
@@ -149,7 +149,7 @@ class Airmad {
 			$argsArray = $this->resolveCsvArgs($args, $context);
 
 			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if (AirmadUtils::sanitize($argsArray[0], true) == AirmadUtils::sanitize($argsArray[1], true)) {
+				if (Utils::sanitize($argsArray[0], true) == Utils::sanitize($argsArray[1], true)) {
 					$buffer = $template->render($context);
 					$template->discard();
 
@@ -179,7 +179,7 @@ class Airmad {
 			$argsArray = $this->resolveCsvArgs($args, $context);
 
 			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if (AirmadUtils::sanitize($argsArray[0], true) != AirmadUtils::sanitize($argsArray[1], true)) {
+				if (Utils::sanitize($argsArray[0], true) != Utils::sanitize($argsArray[1], true)) {
 					$buffer = $template->render($context);
 					$template->discard();
 

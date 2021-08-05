@@ -15,7 +15,7 @@ use Automad\Core;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
-class AirmadModel {
+class Model {
 	/**
 	 *	The Automad data bridge object.
 	 */
@@ -60,7 +60,7 @@ class AirmadModel {
 	public function __construct($options, $Automad) {
 		$this->options = $options;
 
-		$cache = new AirmadModelCache($options);
+		$cache = new ModelCache($options);
 
 		if ($data = $cache->load()) {
 			$this->records = $data->records;
@@ -178,14 +178,14 @@ class AirmadModel {
 		return array_filter($records, function ($record) use ($filters) {
 			foreach ($filters as $filter => $value) {
 				$data = '';
-				$value = AirmadUtils::sanitize(htmlspecialchars_decode($value));
+				$value = Utils::sanitize(htmlspecialchars_decode($value));
 
 				if (!empty($record->fields->$filter)) {
 					$data = $record->fields->$filter;
 					$data = json_encode($data, JSON_UNESCAPED_UNICODE);
 					// Remove keys from JSON.
 					$data = preg_replace('/"[^"]+"\:/', '', $data);
-					$data = AirmadUtils::sanitize($data);
+					$data = Utils::sanitize($data);
 				}
 
 				if ($data) {
@@ -211,15 +211,15 @@ class AirmadModel {
 	 */
 	private function getTables() {
 		$tables = array();
-		$AirmadAPI = new AirmadAPI($this->options);
-		$tables[$this->options->table] = $AirmadAPI->getRecords(
+		$API = new API($this->options);
+		$tables[$this->options->table] = $API->getRecords(
 			$this->options->table,
 			$this->options->view,
 			$this->options->formula
 		);
 
 		foreach (array_values($this->tableMap) as $tableName) {
-			$tables[$tableName] = $AirmadAPI->getRecords($tableName);
+			$tables[$tableName] = $API->getRecords($tableName);
 		}
 
 		return $tables;

@@ -15,7 +15,7 @@ use Automad\Core;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
-class AirmadModelCache {
+class ModelCache {
 	/**
 	 *	The cache directory.
 	 */

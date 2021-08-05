@@ -13,7 +13,7 @@ namespace Airmad;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
-class AirmadAPI {
+class API {
 	/**
 	 *	The base URL of the Airtable API.
 	 */
@@ -52,7 +52,7 @@ class AirmadAPI {
 	 *	@param string $formula
 	 */
 	public function getRecords($table, $view = false, $formula = false) {
-		$cache = new AirmadCache($this->options->base, $table, $view, $formula);
+		$cache = new Cache($this->options->base, $table, $view, $formula);
 
 		if ($records = $cache->load()) {
 			return $records;

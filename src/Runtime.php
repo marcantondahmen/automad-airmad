@@ -13,7 +13,7 @@ namespace Airmad;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
-class AirmadRuntime {
+class Runtime {
 	/**
 	 *	The runtime hash array.
 	 */

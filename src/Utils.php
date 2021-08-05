@@ -13,7 +13,7 @@ namespace Airmad;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
-class AirmadUtils {
+class Utils {
 	/**
 	 *	Sanitizes a string to be camparable and used as a filter.
 	 *
