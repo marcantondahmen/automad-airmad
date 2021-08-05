@@ -218,6 +218,16 @@ To just get the records for example, you can use:
 
     {{#json records}}
 
+Markdown
+~~~~~~~~
+
+Rich text content in Airtable fields is returned from the Airtable API in the Markdown format.
+In order to convert such content to actual HTML, the `markdown` helper can be used as follows:
+
+.. code-block:: php
+
+    {{#markdown field}}
+
 If Equals
 ~~~~~~~~~
 
