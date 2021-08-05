@@ -5,89 +5,67 @@
  *	An Airtable integration for Automad.
  *
  *	@author Marc Anton Dahmen
- *	@copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de> 
+ *	@copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
  *	@license MIT license
  */
 
 namespace Airmad;
-use Automad\Core;
 
+use Automad\Core;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
-
 class AirmadModel {
-
-
-	/**
-	 *	The options array.
-	 */
-
-	private $options = array();
-
-
 	/**
 	 *	The Automad data bridge object.
 	 */
-
 	private $AutomadDataBridge;
-
-
-	/**
-	 *	The table map array (field => table).
-	 */	
-
-	private $tableMap = array();
-
-
-	/**
-	 *	The actual records array.
-	 */
-
-	private $records = array();
-
 
 	/**
 	 *	The filter data array.
 	 */
-
 	private $filterData = array();
-
 
 	/**
 	 *	The reduced filter data array. Only filters that matche the filtered set of records.
 	 */
-
 	private $filteredFilterData = array();
-
 
 	/**
 	 *	The name of the ID field.
 	 */
-
 	private $idFieldName = '_ID';
 
-		
+	/**
+	 *	The options array.
+	 */
+	private $options = array();
+
+	/**
+	 *	The actual records array.
+	 */
+	private $records = array();
+
+	/**
+	 *	The table map array (field => table).
+	 */
+	private $tableMap = array();
+
 	/**
 	 *	The constructor.
 	 *
 	 *	@param object $options
 	 *	@param object $Automad
 	 */
-
 	public function __construct($options, $Automad) {
-
 		$this->options = $options;
-		
+
 		$cache = new AirmadModelCache($options);
 
 		if ($data = $cache->load()) {
-
 			$this->records = $data->records;
 			$this->filterData = $data->filterData;
-
 		} else {
-
 			$this->tableMap = $this->buildTableMap(Core\Parse::csv($options->linked));
 
 			$this->records = $this->prepareRecords($this->getTables());
@@ -95,15 +73,29 @@ class AirmadModel {
 
 			$data = (object) array('records' => $this->records, 'filterData' => $this->filterData);
 			$cache->save($data);
-
 		}
 
 		$this->records = $this->filterRecords($this->records);
 		$this->filteredFilterData = $this->extractFilterData($this->records);
 		$this->AutomadDataBridge = new AutomadDataBridge($Automad);
-
 	}
 
+	/**
+	 *	Returns the model object.
+	 *
+	 *	@return array The model object.
+	 */
+	public function get() {
+		return (object) array(
+			'records' => $this->records,
+			'filters' => $this->filterData,
+			'filteredFilters' => $this->filteredFilterData,
+			'query' => $_GET,
+			'count' => count($this->records),
+			'pages' => ceil(count($this->records) / $this->options->limit),
+			'automad' => $this->AutomadDataBridge->get()
+		);
+	}
 
 	/**
 	 *	Builds a map of fields linked to tables by passing an array of strings like "field => table".
@@ -111,17 +103,13 @@ class AirmadModel {
 	 *	@param array $links
 	 *	@return array The map array
 	 */
-
 	private function buildTableMap($links) {
-
 		$tableMap = array();
 
 		foreach ($links as $link) {
-
 			$parts = preg_split('/\s*\=\>\s*/', $link);
 
 			if (!empty($parts)) {
-
 				$field = $parts[0];
 				$table = $field;
 
@@ -130,15 +118,41 @@ class AirmadModel {
 				}
 
 				$tableMap[$field] = $table;
-
-			}	
-
+			}
 		}
 
 		return $tableMap;
-
 	}
 
+	/**
+	 *	Returns a unique list of filter records to be use as values for autocomplete lists.
+	 *
+	 *	@param array $records
+	 *	@return array The filter data.
+	 */
+	private function extractFilterData($records) {
+		$data = array();
+
+		foreach ($this->options->filters as $filter) {
+			$filterRecords = array();
+
+			foreach ($records as $record) {
+				if (!empty($record->fields->$filter)) {
+					if (is_array($record->fields->$filter)) {
+						foreach ($record->fields->$filter as $item) {
+							$filterRecords[md5(serialize($item))] = $item;
+						}
+					} else {
+						$filterRecords[$record->fields->$filter] = $record->fields->$filter;
+					}
+				}
+			}
+
+			$data[$filter] = $filterRecords;
+		}
+
+		return $data;
+	}
 
 	/**
 	 *	Filters records for the items defined in $options->filters.
@@ -146,29 +160,23 @@ class AirmadModel {
 	 *	@param array $records
 	 *	@return array The filtered records array
 	 */
-
 	private function filterRecords($records) {
-
 		$filters = array();
 
 		foreach ($this->options->filters as $filter) {
-
 			$value = Core\Request::query(str_replace(' ', '_', $filter));
 
 			if ($value) {
 				$filters[$filter] = $value;
 			}
-			
 		}
 
 		if (empty($filters)) {
 			return $records;
 		}
 
-		return array_filter($records, function($record) use ($filters) {
-
+		return array_filter($records, function ($record) use ($filters) {
 			foreach ($filters as $filter => $value) {
-
 				$data = '';
 				$value = AirmadUtils::sanitize(htmlspecialchars_decode($value));
 
@@ -186,65 +194,51 @@ class AirmadModel {
 				} else {
 					$match = false;
 				}
-				
+
 				if (!$match) {
 					return false;
 				}
-
 			}
 
 			return true;
-
 		});
-
 	}
 
-
 	/**
-	 *	Get all required tables including the linked ones. 
+	 *	Get all required tables including the linked ones.
 	 *
 	 *	@return array The tables array.
 	 */
-
 	private function getTables() {
-
 		$tables = array();
 		$AirmadAPI = new AirmadAPI($this->options);
 		$tables[$this->options->table] = $AirmadAPI->getRecords(
-											$this->options->table, 
-											$this->options->view, 
-											$this->options->formula
-										 );
-		
+			$this->options->table,
+			$this->options->view,
+			$this->options->formula
+		);
+
 		foreach (array_values($this->tableMap) as $tableName) {
 			$tables[$tableName] = $AirmadAPI->getRecords($tableName);
 		}
 
 		return $tables;
-
 	}
-	
-	
+
 	/**
 	 *	Links records of linked tables and creates record id field and returns the main table.
 	 *
 	 *	@param array $tables
 	 *	@return array The main table records including the liked data.
 	 */
-
 	private function prepareRecords($tables) {
-	
-		array_walk($tables[$this->options->table], function(&$record) use ($tables) {
-
+		array_walk($tables[$this->options->table], function (&$record) use ($tables) {
 			foreach ($record->fields as $fieldName => $ids) {
-
 				if (in_array($fieldName, array_keys($this->tableMap))) {
-
 					$linkedRecords = array();
 					$tableName = $this->tableMap[$fieldName];
 
 					foreach ($ids as $id) {
-						
 						$key = array_search($id, array_column($tables[$tableName], 'id'));
 
 						if ($key !== false) {
@@ -252,89 +246,17 @@ class AirmadModel {
 							$linkedRecordFields->{$this->idFieldName} = $id;
 							$linkedRecords[] = $linkedRecordFields;
 						}
-
 					}
-					
+
 					$record->fields->{$fieldName} = $linkedRecords;
-					$linkedRecords = NULL;
-
+					$linkedRecords = null;
 				}
-
 			}
-			
+
 			// Make id accessible within fields.
 			$record->fields->{$this->idFieldName} = $record->id;
-
 		});
 
 		return $tables[$this->options->table];
-
 	}
-
-
-	/**
-	 *	Returns the model object.
-	 *
-	 *	@return array The model object.
-	 */
-
-	public function get() {
-
-		return (object) array(
-			'records' => $this->records,
-			'filters' => $this->filterData,
-			'filteredFilters' => $this->filteredFilterData,
-			'query' => $_GET,
-			'count' => count($this->records),
-			'pages' => ceil(count($this->records) / $this->options->limit),
-			'automad' => $this->AutomadDataBridge->get()
-		);
-
-	}
-
-
-	/**
-	 *	Returns a unique list of filter records to be use as values for autocomplete lists.
-	 *
-	 *	@param array $records
-	 *	@return array The filter data.
-	 */
-
-	private function extractFilterData($records) {
-
-		$data = array();
-		
-		foreach ($this->options->filters as $filter) {
-
-			$filterRecords = array();
-
-			foreach ($records as $record) {
-
-				if (!empty($record->fields->$filter)) {
-
-					if (is_array($record->fields->$filter)) {
-
-						foreach ($record->fields->$filter as $item) {
-							$filterRecords[md5(serialize($item))] = $item;
-						}
-	
-					} else {
-	
-						$filterRecords[$record->fields->$filter] = $record->fields->$filter;
-	
-					}
-
-				}
-
-			}
-
-			$data[$filter] = $filterRecords;
-
-		} 
-
-		return $data;
-
-	}
-	
-
 }
