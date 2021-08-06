@@ -195,6 +195,29 @@ class Airmad {
 			return false;
 		});
 
+		$handlebars->addHelper('unique', function ($template, $context, $args, $source) use ($handlebars) {
+			$data = $context->get($args);
+			$buffer = '';
+
+			if (is_array($data)) {
+				$unique = array();
+
+				foreach ($data as $item) {
+					$unique[serialize($item)] = $item;
+				}
+
+				$unique = array_values($unique);
+
+				foreach ($unique as $item) {
+					$buffer .= $handlebars->render($source, $item);
+				}
+			}
+
+			$template->discard();
+
+			return $buffer;
+		});
+
 		return $handlebars->render(
 			$this->options->template,
 			$this->model
