@@ -280,12 +280,23 @@ useful in case you need to concatenate a list of items with a comma:
 
 .. code-block:: php
 
-    {{#each Type }}
+    {{#each Type}}
         <i>{{Name}}</i>{{#unless @last}},{{/unless}}
     {{/each}}
 
 You can find more about the use of data variables in 
 `here <https://github.com/salesforce/handlebars-php#data-variables-for-each>`_.
+
+Unique Loops
+~~~~~~~~~~~~
+
+The ``unique`` loop works exactly like a normal ``each`` loop except the fact that duplicate items are ignored.
+
+.. code-block:: php
+
+    {{#unique Type}}
+        <i>{{Name}}</i>{{#unless @last}},{{/unless}}
+    {{/unique}}
 
 More Handlebars Helpers
 ~~~~~~~~~~~~~~~~~~~~~~~
