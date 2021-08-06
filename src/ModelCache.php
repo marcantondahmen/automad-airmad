@@ -11,7 +11,8 @@
 
 namespace Airmad;
 
-use Automad\Core;
+use Automad\Core\Debug;
+use Automad\Core\FileSystem;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
@@ -50,13 +51,13 @@ class ModelCache {
 			$this->lifeTime = 0;
 		}
 
-		Core\Debug::log($this->lifeTime, 'Airmad model cache lifetime');
-		Core\Debug::log($options, 'New Airmad model cache instance for');
+		Debug::log($this->lifeTime, 'Airmad model cache lifetime');
+		Debug::log($options, 'New Airmad model cache instance for');
 
 		$filtersJson = json_encode($options->filters);
 		$hash = sha1("{$options->base}/{$options->table}/{$options->view}/{$options->linked}/{$filtersJson}/{$options->formula}");
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
-		Core\FileSystem::makeDir($this->cacheDir);
+		FileSystem::makeDir($this->cacheDir);
 
 		if (is_readable($this->cacheFile)) {
 			$mTime = filemtime($this->cacheFile);
@@ -81,7 +82,7 @@ class ModelCache {
 			return false;
 		}
 
-		Core\Debug::log('Loading model data from cache');
+		Debug::log('Loading model data from cache');
 
 		return unserialize(file_get_contents($this->cacheFile));
 	}
@@ -92,7 +93,7 @@ class ModelCache {
 	 *	@param array $data
 	 */
 	public function save($data) {
-		Core\Debug::log('Saving model data to cache');
-		Core\FileSystem::write($this->cacheFile, serialize($data));
+		Debug::log('Saving model data to cache');
+		FileSystem::write($this->cacheFile, serialize($data));
 	}
 }

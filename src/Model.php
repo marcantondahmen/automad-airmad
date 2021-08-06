@@ -11,7 +11,8 @@
 
 namespace Airmad;
 
-use Automad\Core;
+use Automad\Core\Parse;
+use Automad\Core\Request;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
@@ -66,7 +67,7 @@ class Model {
 			$this->records = $data->records;
 			$this->filterData = $data->filterData;
 		} else {
-			$this->tableMap = $this->buildTableMap(Core\Parse::csv($options->linked));
+			$this->tableMap = $this->buildTableMap(Parse::csv($options->linked));
 
 			$this->records = $this->prepareRecords($this->getTables());
 			$this->filterData = $this->extractFilterData($this->records);
@@ -164,7 +165,7 @@ class Model {
 		$filters = array();
 
 		foreach ($this->options->filters as $filter) {
-			$value = Core\Request::query(str_replace(' ', '_', $filter));
+			$value = Request::query(str_replace(' ', '_', $filter));
 
 			if ($value) {
 				$filters[$filter] = $value;

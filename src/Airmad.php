@@ -11,10 +11,13 @@
 
 namespace Airmad;
 
+use Automad\Core\Debug;
+use Automad\Core\Parse;
+use Automad\Core\Str;
+use Automad\Core\Toolbox;
+use Handlebars\Context;
 use Handlebars\Handlebars;
 use Handlebars\Loader\FilesystemLoader;
-use Automad\Core;
-use Automad\Core\Str;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
@@ -58,7 +61,7 @@ class Airmad {
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
-		$this->options->filters = Core\Parse::csv($this->options->filters);
+		$this->options->filters = Parse::csv($this->options->filters);
 		$this->options->limit = intval($this->options->limit);
 		$this->options->page = intval($this->options->page);
 
@@ -78,7 +81,7 @@ class Airmad {
 		$this->model = $Model->get();
 		$Model = null;
 
-		Core\Debug::log($this->model, 'Model');
+		Debug::log($this->model, 'Model');
 
 		$count = count($this->model->records);
 
@@ -86,7 +89,7 @@ class Airmad {
 
 		$output = $this->render();
 
-		$Toolbox = new Core\Toolbox($Automad);
+		$Toolbox = new Toolbox($Automad);
 
 		$Toolbox->set(array(
 			"{$this->options->prefix}Output" => $output,
@@ -235,7 +238,7 @@ class Airmad {
 	private function resolveCsvArgs($csv, $context) {
 		$args = array();
 
-		foreach (Core\Parse::csv($csv) as $arg) {
+		foreach (Parse::csv($csv) as $arg) {
 			if (preg_match('/"([^"]*)"/', $arg, $matches)) {
 				$args[] = $matches[1];
 			} else {
