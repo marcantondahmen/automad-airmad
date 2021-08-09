@@ -13,9 +13,7 @@ namespace Airmad;
 
 use Automad\Core\Debug;
 use Automad\Core\Parse;
-use Automad\Core\Str;
 use Automad\Core\Toolbox;
-use Handlebars\Context;
 use Handlebars\Handlebars;
 use Handlebars\Loader\FilesystemLoader;
 
@@ -116,137 +114,29 @@ class Airmad {
 			$settings['partials_loader'] = $partialsLoader;
 		}
 
+		$helpers = array(
+			'if==' => 'ifEqual',
+			'if!=' => 'ifNotEqual',
+			'ifsan==' => 'ifSanitizedEqual',
+			'ifsan!=' => 'ifSanitizedNotEqual',
+			'json' => 'json',
+			'markdown' => 'markdown',
+			'sanitize' => 'sanitize',
+			'slider' => 'slider',
+			'sliderLarge' => 'sliderLarge',
+			'unique' => 'unique'
+		);
+
 		$handlebars = new Handlebars($settings);
 
-		$handlebars->addHelper('json', function ($template, $context, $args, $source) {
-			return json_encode($context->get($args));
-		});
-
-		$handlebars->addHelper('markdown', function ($template, $context, $args, $source) {
-			return Str::markdown($context->get($args));
-		});
-
-		$handlebars->addHelper('sanitize', function ($template, $context, $args, $source) {
-			return Utils::sanitize($context->get($args));
-		});
-
-		$handlebars->addHelper('slider', function ($template, $context, $args, $source) {
-			return Slider::render($template, $context, $args, 'large');
-		});
-
-		$handlebars->addHelper('sliderLarge', function ($template, $context, $args, $source) {
-			return Slider::render($template, $context, $args, 'full');
-		});
-
-		$handlebars->addHelper('if==', function ($template, $context, $args, $source) {
-			$argsArray = $this->resolveCsvArgs($args, $context);
-
-			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if ($argsArray[0] == $argsArray[1]) {
-					$buffer = $template->render($context);
-					$template->discard();
-
-					return $buffer;
-				}
-			}
-
-			return false;
-		});
-
-		$handlebars->addHelper('ifsan==', function ($template, $context, $args, $source) {
-			$argsArray = $this->resolveCsvArgs($args, $context);
-
-			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if (Utils::sanitize($argsArray[0], true) == Utils::sanitize($argsArray[1], true)) {
-					$buffer = $template->render($context);
-					$template->discard();
-
-					return $buffer;
-				}
-			}
-
-			return false;
-		});
-
-		$handlebars->addHelper('if!=', function ($template, $context, $args, $source) {
-			$argsArray = $this->resolveCsvArgs($args, $context);
-
-			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if ($argsArray[0] != $argsArray[1]) {
-					$buffer = $template->render($context);
-					$template->discard();
-
-					return $buffer;
-				}
-			}
-
-			return false;
-		});
-
-		$handlebars->addHelper('ifsan!=', function ($template, $context, $args, $source) {
-			$argsArray = $this->resolveCsvArgs($args, $context);
-
-			if (!empty($argsArray[0]) && !empty($argsArray[1])) {
-				if (Utils::sanitize($argsArray[0], true) != Utils::sanitize($argsArray[1], true)) {
-					$buffer = $template->render($context);
-					$template->discard();
-
-					return $buffer;
-				}
-			}
-
-			return false;
-		});
-
-		$handlebars->addHelper('unique', function ($template, $context, $args, $source) use ($handlebars) {
-			$data = $context->get($args);
-			$buffer = '';
-
-			if (is_array($data)) {
-				$unique = array();
-
-				foreach ($data as $item) {
-					$unique[serialize($item)] = $item;
-				}
-
-				$unique = array_values($unique);
-
-				foreach ($unique as $item) {
-					$buffer .= $handlebars->render($source, $item);
-				}
-			}
-
-			$template->discard();
-
-			return $buffer;
-		});
+		foreach ($helpers as $name => $method) {
+			$handlebars->addHelper($name, "\Airmad\Helpers::$method");
+		}
 
 		return $handlebars->render(
 			$this->options->template,
 			$this->model
 		);
-	}
-
-	/**
-	 *	Resolves the values for a given CSV list. Values can either be double quoted strings or field names.
-	 *	Field names are resolved than to a value while strings will just have their wrapping quotes removed.
-	 *
-	 *	@param string $csv
-	 *	@param object $context
-	 *	@return array An array with all resolved values
-	 */
-	private function resolveCsvArgs($csv, $context) {
-		$args = array();
-
-		foreach (Parse::csv($csv) as $arg) {
-			if (preg_match('/"([^"]*)"/', $arg, $matches)) {
-				$args[] = $matches[1];
-			} else {
-				$args[] = $context->get($arg);
-			}
-		}
-
-		return $args;
 	}
 
 	/**
