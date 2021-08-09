@@ -1,12 +1,12 @@
 <?php
 /**
- *	Airmad
+ * Airmad
  *
- *	An Airtable integration for Automad.
+ * An Airtable integration for Automad.
  *
- *	@author Marc Anton Dahmen
- *	@copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
- *	@license MIT license
+ * @author Marc Anton Dahmen
+ * @copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
+ * @license MIT license
  */
 
 namespace Airmad;
@@ -15,24 +15,24 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class API {
 	/**
-	 *	The base URL of the Airtable API.
+	 * The base URL of the Airtable API.
 	 */
 	private $apiUrl = 'https://api.airtable.com/v0';
 
 	/**
-	 *	The options array.
+	 * The options array.
 	 */
 	private $options;
 
 	/**
-	 *	The authentication token.
+	 * The authentication token.
 	 */
 	private $token = false;
 
 	/**
-	 *	The constructor.
+	 * The constructor.
 	 *
-	 *	@param object $options
+	 * @param object $options
 	 */
 	public function __construct($options) {
 		$this->options = $options;
@@ -45,11 +45,11 @@ class API {
 	}
 
 	/**
-	 *	Requests all records of a table.
+	 * Requests all records of a table.
 	 *
-	 *	@param string $table
-	 *	@param string $view
-	 *	@param string $formula
+	 * @param string $table
+	 * @param string $view
+	 * @param string $formula
 	 */
 	public function getRecords($table, $view = false, $formula = false) {
 		$cache = new Cache($this->options->base, $table, $view, $formula);
@@ -99,9 +99,9 @@ class API {
 	}
 
 	/**
-	 *	Makes an API curl request.
+	 * Makes an API curl request.
 	 *
-	 *	@param string $url
+	 * @param string $url
 	 */
 	private function request($url) {
 		$data = array();

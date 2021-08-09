@@ -1,12 +1,12 @@
 <?php
 /**
- *	Airmad
+ * Airmad
  *
- *	An Airtable integration for Automad.
+ * An Airtable integration for Automad.
  *
- *	@author Marc Anton Dahmen
- *	@copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
- *	@license MIT license
+ * @author Marc Anton Dahmen
+ * @copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
+ * @license MIT license
  */
 
 namespace Airmad;
@@ -18,45 +18,45 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class Model {
 	/**
-	 *	The Automad data bridge object.
+	 * The Automad data bridge object.
 	 */
 	private $AutomadDataBridge;
 
 	/**
-	 *	The filter data array.
+	 * The filter data array.
 	 */
 	private $filterData = array();
 
 	/**
-	 *	The reduced filter data array. Only filters that matche the filtered set of records.
+	 * The reduced filter data array. Only filters that matche the filtered set of records.
 	 */
 	private $filteredFilterData = array();
 
 	/**
-	 *	The name of the ID field.
+	 * The name of the ID field.
 	 */
 	private $idFieldName = '_ID';
 
 	/**
-	 *	The options array.
+	 * The options array.
 	 */
 	private $options = array();
 
 	/**
-	 *	The actual records array.
+	 * The actual records array.
 	 */
 	private $records = array();
 
 	/**
-	 *	The table map array (field => table).
+	 * The table map array (field => table).
 	 */
 	private $tableMap = array();
 
 	/**
-	 *	The constructor.
+	 * The constructor.
 	 *
-	 *	@param object $options
-	 *	@param object $Automad
+	 * @param object $options
+	 * @param object $Automad
 	 */
 	public function __construct($options, $Automad) {
 		$this->options = $options;
@@ -82,9 +82,9 @@ class Model {
 	}
 
 	/**
-	 *	Returns the model object.
+	 * Returns the model object.
 	 *
-	 *	@return array The model object.
+	 * @return array The model object.
 	 */
 	public function get() {
 		return (object) array(
@@ -99,10 +99,10 @@ class Model {
 	}
 
 	/**
-	 *	Builds a map of fields linked to tables by passing an array of strings like "field => table".
+	 * Builds a map of fields linked to tables by passing an array of strings like "field => table".
 	 *
-	 *	@param array $links
-	 *	@return array The map array
+	 * @param array $links
+	 * @return array The map array
 	 */
 	private function buildTableMap($links) {
 		$tableMap = array();
@@ -126,10 +126,10 @@ class Model {
 	}
 
 	/**
-	 *	Returns a unique list of filter records to be use as values for autocomplete lists.
+	 * Returns a unique list of filter records to be use as values for autocomplete lists.
 	 *
-	 *	@param array $records
-	 *	@return array The filter data.
+	 * @param array $records
+	 * @return array The filter data.
 	 */
 	private function extractFilterData($records) {
 		$data = array();
@@ -156,10 +156,10 @@ class Model {
 	}
 
 	/**
-	 *	Filters records for the items defined in $options->filters.
+	 * Filters records for the items defined in $options->filters.
 	 *
-	 *	@param array $records
-	 *	@return array The filtered records array
+	 * @param array $records
+	 * @return array The filtered records array
 	 */
 	private function filterRecords($records) {
 		$filters = array();
@@ -206,9 +206,9 @@ class Model {
 	}
 
 	/**
-	 *	Get all required tables including the linked ones.
+	 * Get all required tables including the linked ones.
 	 *
-	 *	@return array The tables array.
+	 * @return array The tables array.
 	 */
 	private function getTables() {
 		$tables = array();
@@ -227,10 +227,10 @@ class Model {
 	}
 
 	/**
-	 *	Links records of linked tables and creates record id field and returns the main table.
+	 * Links records of linked tables and creates record id field and returns the main table.
 	 *
-	 *	@param array $tables
-	 *	@return array The main table records including the liked data.
+	 * @param array $tables
+	 * @return array The main table records including the liked data.
 	 */
 	private function prepareRecords($tables) {
 		array_walk($tables[$this->options->table], function (&$record) use ($tables) {

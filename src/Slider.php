@@ -1,12 +1,12 @@
 <?php
 /**
- *	Airmad
+ * Airmad
  *
- *	An Airtable integration for Automad.
+ * An Airtable integration for Automad.
  *
- *	@author Marc Anton Dahmen
- *	@copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
- *	@license MIT license
+ * @author Marc Anton Dahmen
+ * @copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
+ * @license MIT license
  */
 
 namespace Airmad;
@@ -15,13 +15,13 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class Slider {
 	/**
-	 *	Renders a slider component.
+	 * Renders a slider component.
 	 *
-	 *	@param string $template
-	 *	@param object $context
-	 *	@param string $args
-	 *	@param string $var
-	 *	@return string The rendered output
+	 * @param string $template
+	 * @param object $context
+	 * @param string $args
+	 * @param string $var
+	 * @return string The rendered output
 	 */
 	public static function render($template, $context, $args, $var) {
 		preg_match('/^([\s\w\-\.\_]+?)(\s+\d{1,3}%)?$/i', $args, $argsArray);

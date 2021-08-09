@@ -1,12 +1,12 @@
 <?php
 /**
- *	Airmad
+ * Airmad
  *
- *	An Airtable integration for Automad.
+ * An Airtable integration for Automad.
  *
- *	@author Marc Anton Dahmen
- *	@copyright Copyright (C) 2021 Marc Anton Dahmen - <https://marcdahmen.de>
- *	@license MIT license
+ * @author Marc Anton Dahmen
+ * @copyright Copyright (C) 2021 Marc Anton Dahmen - <https://marcdahmen.de>
+ * @license MIT license
  */
 
 namespace Airmad;
@@ -18,12 +18,12 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class Utils {
 	/**
-	 *	Resolves the values for a given CSV list. Values can either be double quoted strings or field names.
-	 *	Field names are resolved than to a value while strings will just have their wrapping quotes removed.
+	 * Resolves the values for a given CSV list. Values can either be double quoted strings or field names.
+	 * Field names are resolved than to a value while strings will just have their wrapping quotes removed.
 	 *
-	 *	@param string $csv
-	 *	@param object $context
-	 *	@return array An array with all resolved values
+	 * @param string $csv
+	 * @param object $context
+	 * @return array An array with all resolved values
 	 */
 	public static function resolveCsvArgs($csv, $context) {
 		$args = array();
@@ -39,11 +39,11 @@ class Utils {
 		return $args;
 	}
 	/**
-	 *	Sanitizes a string to be camparable and used as a filter.
+	 * Sanitizes a string to be camparable and used as a filter.
 	 *
-	 *	@param string $str
-	 *	@param boolean $stripQuotes
-	 *	@return string The sanitized string.
+	 * @param string $str
+	 * @param boolean $stripQuotes
+	 * @return string The sanitized string.
 	 */
 	public static function sanitize($str, $stripQuotes = false) {
 		$str = str_replace('/', '-', $str);

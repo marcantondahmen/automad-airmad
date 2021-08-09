@@ -1,12 +1,12 @@
 <?php
 /**
- *	Airmad
+ * Airmad
  *
- *	An Airtable integration for Automad.
+ * An Airtable integration for Automad.
  *
- *	@author Marc Anton Dahmen
- *	@copyright Copyright (C) 2021 Marc Anton Dahmen - <https://marcdahmen.de>
- *	@license MIT license
+ * @author Marc Anton Dahmen
+ * @copyright Copyright (C) 2021 Marc Anton Dahmen - <https://marcdahmen.de>
+ * @license MIT license
  */
 
 namespace Airmad;
@@ -15,19 +15,19 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class AutomadDataBridge {
 	/**
-	 *	The Automad object.
+	 * The Automad object.
 	 */
 	private $Automad;
 
 	/**
-	 *	The data array.
+	 * The data array.
 	 */
 	private $data;
 
 	/**
-	 *	The constructor.
+	 * The constructor.
 	 *
-	 *	@param object $Automad
+	 * @param object $Automad
 	 */
 	public function __construct($Automad) {
 		$this->data = array_merge(
@@ -37,9 +37,9 @@ class AutomadDataBridge {
 	}
 
 	/**
-	 *	Return the data array.
+	 * Return the data array.
 	 *
-	 *	@return array $data.
+	 * @return array $data.
 	 */
 	public function get() {
 		return $this->data;

@@ -1,12 +1,12 @@
 <?php
 /**
- *	Airmad
+ * Airmad
  *
- *	An Airtable integration for Automad.
+ * An Airtable integration for Automad.
  *
- *	@author Marc Anton Dahmen
- *	@copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
- *	@license MIT license
+ * @author Marc Anton Dahmen
+ * @copyright Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
+ * @license MIT license
  */
 
 namespace Airmad;
@@ -21,21 +21,21 @@ defined('AUTOMAD') or die('Direct access not permitted!');
 
 class Airmad {
 	/**
-	 *	The data model.
+	 * The data model.
 	 */
 	private $model;
 
 	/**
-	 *	The options array.
+	 * The options array.
 	 */
 	private $options = array();
 
 	/**
-	 *	The main function.
+	 * The main function.
 	 *
-	 *	@param array $options
-	 *	@param object $Automad
-	 *	@return string the output of the extension
+	 * @param array $options
+	 * @param object $Automad
+	 * @return string the output of the extension
 	 */
 	public function Airmad($options, $Automad) {
 		$hash = sha1(json_encode($options));
@@ -101,9 +101,9 @@ class Airmad {
 	}
 
 	/**
-	 *	Renders an item template.
+	 * Renders an item template.
 	 *
-	 *	@return string The rendered output.
+	 * @return string The rendered output.
 	 */
 	private function render() {
 		$settings = array('enableDataVariables' => true);
@@ -140,7 +140,7 @@ class Airmad {
 	}
 
 	/**
-	 *	Slices the main records array of the main table to fit the pagination settings.
+	 * Slices the main records array of the main table to fit the pagination settings.
 	 */
 	private function slice() {
 		$offset = ($this->options->page - 1) * $this->options->limit;

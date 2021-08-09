@@ -1,19 +1,17 @@
 /*
- *	Airmad
+ * Airmad
  *
- *	An Airtable integration for Automad.
+ * An Airtable integration for Automad.
  *
- *	Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
- *	MIT license
+ * Copyright (C) 2020-2021 Marc Anton Dahmen - <https://marcdahmen.de>
+ * MIT license
  */
 
 .airmad-slider {
-
 	position: relative;
 	padding-top: var(--airmad-slider-padding-top, 100%);
 
 	&-item {
-
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -27,13 +25,12 @@
 
 		&.active {
 			visibility: visible;
-  			opacity: 1;
+			opacity: 1;
 			pointer-events: initial;
 			transition: opacity 0.2s 0s ease-in;
 		}
 
 		& > img {
-
 			position: absolute;
 			object-fit: cover;
 			width: 100%;
@@ -43,14 +40,11 @@
 			&:hover {
 				transform: scale(1) !important;
 			}
-
 		}
-
 	}
 
 	&-prev,
 	&-next {
-
 		position: absolute;
 		text-decoration: none;
 		top: 50%;
@@ -88,33 +82,27 @@
 			position: relative;
 			top: -2px;
 		}
-
 	}
 
 	&-prev {
-		
 		left: 0;
 
 		&:before {
 			content: '<';
 			margin-left: -0.12em;
 		}
-
 	}
 
 	&-next {
-
 		right: 0;
 
 		&:before {
 			content: '>';
 			margin-right: -0.12em;
 		}
-
 	}
 
 	&-dots {
-
 		position: absolute;
 		bottom: 6px;
 		left: 50%;
@@ -131,16 +119,13 @@
 			height: 10px;
 			margin: 0 5px;
 			border-radius: 100%;
-			background-color: #FFFFFF;
-			border: 2px solid rgba(0,0,0,0.3);
+			background-color: #ffffff;
+			border: 2px solid rgba(0, 0, 0, 0.3);
 			opacity: 0.35;
 		}
 
 		& a.active:before {
 			opacity: 0.7;
 		}
-
 	}
-
-
 }
