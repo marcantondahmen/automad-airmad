@@ -1,0 +1,9 @@
+{%- if landing_page is defined and pagename == master_doc %}
+    {% extends 'landing.html' %}
+{% else %}
+	{% extends 'default.html' %}
+{%- endif %}
+{%- block extrahead %}
+	<meta property="og:image" content="https://madog.vercel.app/airmad.png?page={{pagename}}.html"></meta>
+	<meta name="twitter:card" content="summary_large_image">
+{% endblock %}

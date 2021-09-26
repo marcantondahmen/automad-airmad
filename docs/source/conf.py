@@ -37,12 +37,6 @@ extensions = [
 
 # Open Graph extension config. https://pypi.org/project/sphinxext-opengraph/
 ogp_site_url = 'airmad.readthedocs.io/'
-ogp_image = 'https://raw.githubusercontent.com/marcantondahmen/automad-airmad/master/docs/source/_static/airmad.png'
-ogp_description_length = 150
-
-ogp_custom_meta_tags = [
-    '<meta name="twitter:card" content="summary_large_image">',
-]
 
 html_theme_options = {
     'github_url': 'https://github.com/marcantondahmen/automad-airmad'
