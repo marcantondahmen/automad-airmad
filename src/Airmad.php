@@ -13,7 +13,7 @@ namespace Airmad;
 
 use Automad\Core\Debug;
 use Automad\Core\Parse;
-use Automad\Core\Toolbox;
+use Automad\Engine\Toolbox;
 use Handlebars\Handlebars;
 use Handlebars\Loader\FilesystemLoader;
 
