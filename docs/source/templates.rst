@@ -202,6 +202,15 @@ In order to use values in a query string, it is good practice to sanitize those 
 
     {{#sanitize field}}
 
+Regex Search and Replace
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``replace`` helper can be used to search and replace within a field value using Regex:
+
+.. code-block:: php 
+
+    {{#replace "/regex/", "replace", field}}
+
 JSON Output 
 ~~~~~~~~~~~
 

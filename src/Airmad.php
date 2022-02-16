@@ -121,6 +121,7 @@ class Airmad {
 			'ifsan!=' => 'ifSanitizedNotEqual',
 			'json' => 'json',
 			'markdown' => 'markdown',
+			'replace' => 'replace',
 			'sanitize' => 'sanitize',
 			'slider' => 'slider',
 			'sliderLarge' => 'sliderLarge',

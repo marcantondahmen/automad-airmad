@@ -140,6 +140,21 @@ class Helpers {
 	}
 
 	/**
+	 * Regex search and replace.
+	 *
+	 * @param string $template
+	 * @param object $context
+	 * @param string $args
+	 * @param string $source
+	 * @return string The rendered output
+	 */
+	public static function replace($template, $context, $args, $source) {
+		$args = Utils::resolveCsvArgs($args, $context);
+
+		return preg_replace($args[0], $args[1], $args[2]);
+	}
+
+	/**
 	 * Sanitize content.
 	 *
 	 * @param string $template
