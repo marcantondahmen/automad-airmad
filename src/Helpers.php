@@ -12,7 +12,6 @@
 namespace Airmad;
 
 use Automad\Core\Str;
-use Handlebars\Context;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
@@ -194,20 +193,43 @@ class Helpers {
 	}
 
 	/**
+	 * Iterate a sorted array.
+	 *
+	 * @param string $template
+	 * @param object $context
+	 * @param string $args
+	 * @param string $source
+	 * @return string The rendered output
+	 */
+	public static function sorted($template, $context, $args, $source) {
+		$args = Utils::resolveCsvArgs($args, $context);
+		$data = $args[0];
+
+		if (is_array($data) && count($data)) {
+			if (!empty($args[1])) {
+				$key = $args[1];
+
+				usort($data, function ($a, $b) use ($key) {
+					return $a->$key - $b->$key;
+				});
+			} else {
+				sort($data);
+			}
+
+			return Utils::loop($data, $context, $template);
+		} else {
+			$template->setStopToken('else');
+			$template->discard();
+			$template->setStopToken(false);
+
+			return $template->render($context);
+		}
+	}
+
+	/**
 	 * Loop unique array.
-	 * Same as the built-in each helper but with reducing the array to only contain unique elements before looping.
-	 *
-	 * Code partially taken from the each method of the salesforce/handlebars-php project:
-	 * https://github.com/salesforce/handlebars-php/blob/59fc47c7b2701659cb483d0f3461c4f712693b2b/src/Handlebars/Helpers.php#L253
-	 *
-	 * @package Handlebars
-	 * @author fzerorubigd <fzerorubigd@gmail.com>
-	 * @author Behrooz Shabani <everplays@gmail.com>
-	 * @author Mardix <https://github.com/mardix>
-	 * @copyright 2012 (c) ParsPooyesh Co
-	 * @copyright 2013 (c) Behrooz Shabani
-	 * @copyright 2014 (c) Mardix
-	 * @license MIT
+	 * Same as the built-in each helper but with reducing
+	 * the array to only contain unique elements before looping.
 	 *
 	 * @param string $template
 	 * @param object $context
@@ -219,12 +241,7 @@ class Helpers {
 		$data = $context->get($args);
 
 		if (is_array($data) && count($data)) {
-			$buffer = '';
-			$islist = array_values($data) === $data;
-
-			$itemCount = -1;
-
-			if ($islist) {
+			if (array_values($data) === $data) {
 				$unique = array();
 
 				foreach ($data as $item) {
@@ -232,52 +249,9 @@ class Helpers {
 				}
 
 				$data = array_values($unique);
-				$itemCount = count($data);
 			}
 
-			foreach ($data as $key => $var) {
-				$tpl = clone $template;
-
-				if ($islist) {
-					$context->pushIndex($key);
-
-					// If data variables are enabled, push the data related to this #each context
-					if ($template->getEngine()->isDataVariablesEnabled()) {
-						$context->pushData(array(
-							Context::DATA_KEY => $key,
-							Context::DATA_INDEX => $key,
-							Context::DATA_LAST => $key == ($itemCount - 1),
-							Context::DATA_FIRST => $key == 0,
-						));
-					}
-				} else {
-					$context->pushKey($key);
-
-					// If data variables are enabled, push the data related to this #each context
-					if ($template->getEngine()->isDataVariablesEnabled()) {
-						$context->pushData(array(
-							Context::DATA_KEY => $key,
-						));
-					}
-				}
-
-				$context->push($var);
-				$tpl->setStopToken('else');
-				$buffer .= $tpl->render($context);
-				$context->pop();
-
-				if ($islist) {
-					$context->popIndex();
-				} else {
-					$context->popKey();
-				}
-
-				if ($template->getEngine()->isDataVariablesEnabled()) {
-					$context->popData();
-				}
-			}
-
-			return $buffer;
+			return Utils::loop($data, $context, $template);
 		} else {
 			$template->setStopToken('else');
 			$template->discard();

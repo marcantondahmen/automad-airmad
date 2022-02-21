@@ -296,6 +296,27 @@ useful in case you need to concatenate a list of items with a comma:
 You can find more about the use of data variables in 
 `here <https://github.com/salesforce/handlebars-php#data-variables-for-each>`_.
 
+Sorted Loops
+~~~~~~~~~~~~
+
+The ``sorted`` loop works exactly like a normal ``each`` loop except the fact that all items
+are sorted.
+
+.. code-block:: php
+
+    {{#sorted Category}}
+        {{this}}
+    {{/sorted}}
+
+As a second argument, a key can be specified in order to sort an array of objects by the value
+for the given key.
+
+.. code-block:: php
+
+    {{#sorted Type, "Name"}}
+        <i>{{Name}}</i>{{#unless @last}},{{/unless}}
+    {{/sorted}}
+
 Unique Loops
 ~~~~~~~~~~~~
 

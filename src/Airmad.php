@@ -125,6 +125,7 @@ class Airmad {
 			'sanitize' => 'sanitize',
 			'slider' => 'slider',
 			'sliderLarge' => 'sliderLarge',
+			'sorted' => 'sorted',
 			'unique' => 'unique'
 		);
 
