@@ -144,12 +144,17 @@ class Model {
 							$filterRecords[md5(serialize($item))] = $item;
 						}
 					} else {
-						$filterRecords[$record->fields->$filter] = $record->fields->$filter;
+						$value = $record->fields->$filter;
+
+						if (is_string($value) || is_numeric($value)) {
+							$key = md5(serialize($value));
+							$filterRecords[$key] = $value;
+						}
 					}
 				}
 			}
 
-			$data[$filter] = $filterRecords;
+			$data[$filter] = array_values($filterRecords);
 		}
 
 		return $data;
