@@ -170,10 +170,16 @@ class Model {
 		$filters = array();
 
 		foreach ($this->options->filters as $filter) {
-			$value = Request::query(str_replace(' ', '_', $filter));
+			$value = $_GET[str_replace(' ', '_', $filter)] ?? null;
 
 			if ($value) {
-				$filters[$filter] = $value;
+				if (is_array($value)) {
+					foreach ($value as $v) {
+						$filters[] = array($filter, $v);
+					}
+				} else {
+					$filters[] = array($filter, $value);
+				}
 			}
 		}
 
@@ -182,21 +188,33 @@ class Model {
 		}
 
 		return array_filter($records, function ($record) use ($filters) {
-			foreach ($filters as $filter => $value) {
-				$data = '';
-				$value = Utils::sanitize(htmlspecialchars_decode($value));
+			$dataCache = array();
 
-				if (!empty($record->fields->$filter)) {
-					$data = $record->fields->$filter;
-					$data = json_encode($data, JSON_UNESCAPED_UNICODE);
-					// Remove keys from JSON.
-					$data = preg_replace('/"[^"]+"\:/', '', $data);
-					$data = Utils::sanitize($data);
+			foreach ($filters as $keyValue) {
+				[$filter, $value] = $keyValue;
+
+				if (isset($dataCache[$filter])) {
+					$data = $dataCache[$filter];
+				} else {
+					$data = '';
+
+					if (!empty($record->fields->$filter)) {
+						$data = $record->fields->$filter;
+						$data = json_encode($data, JSON_UNESCAPED_UNICODE);
+						// Remove keys from JSON.
+						$data = preg_replace('/"[^"]+"\:/', '', $data);
+						$data = Utils::sanitize($data);
+					}
+
+					// Cache sanitized data in case the records are filtered by multiple values
+					// for the same filter.
+					$dataCache[$filter] = $data;
 				}
 
 				if ($data) {
-					$value = preg_quote($value);
-					$match = preg_match("/$value/is", $data);
+					$value = Utils::sanitize(htmlspecialchars_decode($value));
+					$pattern = preg_quote($value);
+					$match = preg_match("/$pattern/is", $data);
 				} else {
 					$match = false;
 				}

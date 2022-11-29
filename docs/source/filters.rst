@@ -62,6 +62,20 @@ has to be changed to
 
 to only match records with a ``name`` that is equals ``value``.
 
+Multiple Values per Field
+-------------------------
+
+It is also possible to combine **multiple** values to filter a particular field. In that case, all 
+provided filter values have to match the a record field in order to include that record in the resulting set.
+The commonly used array-like notation for query strings can be used as follows:
+
+.. code-block:: php 
+
+    https://domain.com?name[]=value1&name[]=value2
+
+Now only records with a field called ``name`` that matches both, ``value1`` as well as ``value2`` are include
+in the filtered collection.
+
 Autocompletion
 --------------
 
