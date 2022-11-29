@@ -239,7 +239,8 @@ class Model {
 		$tables[$this->options->table] = $API->getRecords(
 			$this->options->table,
 			$this->options->view,
-			$this->options->formula
+			$this->options->formula,
+			$this->options->fields
 		);
 
 		foreach (array_values($this->tableMap) as $tableName) {

@@ -11,12 +11,12 @@ theme that supports Automad's block editor. The markup looks as follows:
     **Template Snippet** block on any page in the Automad dashboard. 
 
 .. code-block:: php
-   :emphasize-lines: 7
 
     <@ Airmad/Airmad {
         base: 'appXXXXXXXXXXXXXX',
         table: 'Design projects',
         view: 'All projects',
+        fields: 'Name, Client',
         filters: 'Client, Category',
         formula: 'SEARCH(LOWER("@{ ?search }"), LOWER({Name}))',
         linked: 'Client => Clients',
@@ -71,6 +71,8 @@ Name            Description
 ``base``        The Airtable base ID
 ``table``       The main table to be used to pull records from
 ``view``        The view of the main `table` to be used
+``fields``      A comma separated list of fields that should be included in the records,
+                leave empty to get all fields
 ``prefix``      A **required** prefix for the generated runtime variables --- 
                 prefixes have to be unique, in case 
                 more than one Airmad instance is used on the site 

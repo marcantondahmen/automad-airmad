@@ -48,6 +48,7 @@ class Airmad {
 			'base' => false,
 			'table' => false,
 			'view' => false,
+			'fields' => false,
 			'linked' => false,
 			'template' => false,
 			'partials' => false,
@@ -59,6 +60,7 @@ class Airmad {
 		);
 
 		$this->options = (object) array_merge($defaults, $options);
+		$this->options->fields = Parse::csv($this->options->fields);
 		$this->options->filters = Parse::csv($this->options->filters);
 		$this->options->limit = intval($this->options->limit);
 		$this->options->page = intval($this->options->page);

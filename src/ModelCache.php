@@ -54,8 +54,17 @@ class ModelCache {
 		Debug::log($this->lifeTime, 'Airmad model cache lifetime');
 		Debug::log($options, 'New Airmad model cache instance for');
 
-		$filtersJson = json_encode($options->filters);
-		$hash = sha1("{$options->base}/{$options->table}/{$options->view}/{$options->linked}/{$filtersJson}/{$options->formula}");
+		$hashOptions = array(
+			$options->base,
+			$options->table,
+			$options->view,
+			$options->linked,
+			$options->filters,
+			$options->formula,
+			$options->fields
+		);
+
+		$hash = sha1(json_encode($hashOptions));
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
 		FileSystem::makeDir($this->cacheDir);
 

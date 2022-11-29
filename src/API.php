@@ -50,9 +50,10 @@ class API {
 	 * @param string $table
 	 * @param string $view
 	 * @param string $formula
+	 * @param string $fields
 	 */
-	public function getRecords($table, $view = false, $formula = false) {
-		$cache = new Cache($this->options->base, $table, $view, $formula);
+	public function getRecords($table, $view = false, $formula = false, $fields = array()) {
+		$cache = new Cache($this->options->base, $table, $view, $formula, $fields);
 
 		if ($records = $cache->load()) {
 			return $records;
@@ -68,6 +69,10 @@ class API {
 			'view' => $view,
 			'filterByFormula' => $formula
 		);
+
+		if (!empty($fields)) {
+			$query['fields'] = $fields;
+		}
 
 		$query = array_filter($query);
 

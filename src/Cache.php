@@ -44,8 +44,9 @@ class Cache {
 	 * @param array $table
 	 * @param array $view
 	 * @param array $formula
+	 * @param mixed $fields
 	 */
-	public function __construct($base, $table, $view, $formula) {
+	public function __construct($base, $table, $view, $formula, $fields) {
 		if (defined('AIRMAD_CACHE_LIFETIME')) {
 			$this->lifeTime = AIRMAD_CACHE_LIFETIME;
 		}
@@ -54,10 +55,12 @@ class Cache {
 			$this->lifeTime = 0;
 		}
 
-		Debug::log($this->lifeTime, 'Airmad cache lifetime');
-		Debug::log("{$base} > {$table} > {$view} > {$formula}", 'New Airmad cache instance for');
+		$hashOptions = array($base, $table, $view, $formula, $fields);
 
-		$hash = sha1("{$base}/{$table}/{$view}/{$formula}");
+		Debug::log($this->lifeTime, 'Airmad cache lifetime');
+		Debug::log($hashOptions, 'New Airmad cache instance for');
+
+		$hash = sha1(json_encode($hashOptions));
 		$this->cacheFile = $this->cacheDir . '/' . $hash;
 		FileSystem::makeDir($this->cacheDir);
 
