@@ -50,7 +50,7 @@ class API {
 	 * @param string $table
 	 * @param string $view
 	 * @param string $formula
-	 * @param string $fields
+	 * @param array $fields
 	 */
 	public function getRecords($table, $view = false, $formula = false, $fields = array()) {
 		$cache = new Cache($this->options->base, $table, $view, $formula, $fields);
@@ -64,7 +64,7 @@ class API {
 		$url = "$this->apiUrl/{$this->options->base}/$table";
 
 		$query = array(
-			'maxRecords' => 100000,
+			'maxRecords' => 50000,
 			'pageSize' => 100,
 			'view' => $view,
 			'filterByFormula' => $formula
@@ -84,7 +84,6 @@ class API {
 			}
 
 			$queryString = http_build_query($query);
-
 			$data = $this->request("$url?$queryString");
 
 			if (isset($data->offset)) {

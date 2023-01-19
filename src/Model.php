@@ -12,7 +12,6 @@
 namespace Airmad;
 
 use Automad\Core\Parse;
-use Automad\Core\Request;
 
 defined('AUTOMAD') or die('Direct access not permitted!');
 
@@ -61,6 +60,8 @@ class Model {
 	public function __construct($options, $Automad) {
 		$this->options = $options;
 
+		Debug::log($options);
+
 		$cache = new ModelCache($options);
 
 		if ($data = $cache->load()) {
@@ -87,14 +88,23 @@ class Model {
 	 * @return array The model object.
 	 */
 	public function get() {
-		return (object) array(
-			'records' => $this->records,
-			'filters' => $this->filterData,
-			'filteredFilters' => $this->filteredFilterData,
-			'query' => $_GET,
-			'count' => count($this->records),
-			'pages' => ceil(count($this->records) / $this->options->limit),
-			'automad' => $this->AutomadDataBridge->get()
+		$data = array();
+
+		if (AM_DEBUG_ENABLED) {
+			$data['debug'] = Debug::get();
+		}
+
+		return (object) array_merge(
+			$data,
+			array(
+				'records' => $this->records,
+				'filters' => $this->filterData,
+				'filteredFilters' => $this->filteredFilterData,
+				'query' => $_GET,
+				'count' => count($this->records),
+				'pages' => ceil(count($this->records) / $this->options->limit),
+				'automad' => $this->AutomadDataBridge->get()
+			)
 		);
 	}
 
@@ -108,19 +118,12 @@ class Model {
 		$tableMap = array();
 
 		foreach ($links as $link) {
-			$parts = preg_split('/\s*\=\>\s*/', $link);
-
-			if (!empty($parts)) {
-				$field = $parts[0];
-				$table = $field;
-
-				if (!empty($parts[1])) {
-					$table = $parts[1];
-				}
-
-				$tableMap[$field] = $table;
+			if ($TableLink = TableLink::fromString($link)) {
+				$tableMap[$TableLink->field] = $TableLink->Table;
 			}
 		}
+
+		Debug::log($tableMap);
 
 		return $tableMap;
 	}
@@ -243,8 +246,8 @@ class Model {
 			$this->options->fields
 		);
 
-		foreach (array_values($this->tableMap) as $tableName) {
-			$tables[$tableName] = $API->getRecords($tableName);
+		foreach (array_values($this->tableMap) as $table) {
+			$tables[$table->name] = $API->getRecords($table->name, false, false, $table->fields);
 		}
 
 		return $tables;
@@ -261,7 +264,7 @@ class Model {
 			foreach ($record->fields as $fieldName => $ids) {
 				if (in_array($fieldName, array_keys($this->tableMap))) {
 					$linkedRecords = array();
-					$tableName = $this->tableMap[$fieldName];
+					$tableName = $this->tableMap[$fieldName]->name;
 
 					foreach ($ids as $id) {
 						$key = array_search($id, array_column($tables[$tableName], 'id'));

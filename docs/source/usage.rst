@@ -19,7 +19,7 @@ theme that supports Automad's block editor. The markup looks as follows:
         fields: 'Name, Client',
         filters: 'Client, Category',
         formula: 'SEARCH(LOWER("@{ ?search }"), LOWER({Name}))',
-        linked: 'Client => Clients',
+        linked: 'Client => Clients[Name Address]',
         prefix: ':example',
         template: '
             {{#records}}
@@ -77,11 +77,15 @@ Name            Description
                 prefixes have to be unique, in case 
                 more than one Airmad instance is used on the site 
 ``linked``      A comma separated list of tables that are linked to a field  
-                of the main table records --- note that is only required to list linked tables 
-                here that include information that you want to display. In case the field name 
-                differs from the actual table name to be linked, it is also possible to pass 
-                a list of strings like ``fieldName1 => tableName1, fieldName2 => tableName2`` 
-                to the parameter to link such fields to any table.
+                of the main table records --- note that it is only required to list linked tables 
+                here that include information that you want to display.   
+                In case the field name differs from the actual table name to be linked, 
+                it is also possible to pass a list of strings like 
+                ``field1 => table1, field2 => table2`` to the parameter to link such fields to 
+                any table.    
+                In order to improve performance, you can also specify the fields in the linked 
+                table like ``field => table[field1 field2]``. This will reduce significantly 
+                the amount of data requested.
 ``template``    The Handlebar template to be used to render the model 
                 (the collection of records) --- 
                 can be either a string, a variable containing a string or a file path

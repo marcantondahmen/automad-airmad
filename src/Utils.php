@@ -78,6 +78,7 @@ class Utils {
 
 		return $buffer;
 	}
+
 	/**
 	 * Resolves the values for a given CSV list. Values can either be double quoted strings or field names.
 	 * Field names are resolved than to a value while strings will just have their wrapping quotes removed.
