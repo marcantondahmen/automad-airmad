@@ -17,12 +17,12 @@ class Table {
 	/**
 	 * A list of fields that have to be included in the request.
 	 */
-	public array $fields;
+	public $fields;
 
 	/**
 	 * The table name to be requested.
 	 */
-	public string $name;
+	public $name;
 
 	/**
 	 * The constructor.

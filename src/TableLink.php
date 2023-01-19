@@ -17,12 +17,12 @@ class TableLink {
 	/**
 	 * A field that links to the table.
 	 */
-	public string $field;
+	public $field;
 
 	/**
 	 * The table name to be requested.
 	 */
-	public Table $Table;
+	public $Table;
 
 	/**
 	 * The constructor.
@@ -47,7 +47,7 @@ class TableLink {
 	 * @param string $link
 	 * @return TableLink|null
 	 */
-	public static function fromString(string $link): ?TableLink {
+	public static function fromString(string $link) {
 		$parts = preg_split('/\s*\=\>\s*/', $link);
 
 		if (empty($parts)) {

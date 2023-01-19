@@ -32,9 +32,8 @@ class Debug {
 	 * Add an entry to the entries array.
 	 *
 	 * @param mixed $entry
-	 * @return void
 	 */
-	public static function log(mixed $entry): void {
+	public static function log($entry) {
 		$backtraceAll = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
 		$ignoreFunctions = array('log', __NAMESPACE__ . '\{closure}');
 

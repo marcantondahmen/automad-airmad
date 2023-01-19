@@ -64,7 +64,7 @@ class API {
 		$url = "$this->apiUrl/{$this->options->base}/$table";
 
 		$query = array(
-			'maxRecords' => 50000,
+			'maxRecords' => 100000,
 			'pageSize' => 100,
 			'view' => $view,
 			'filterByFormula' => $formula
